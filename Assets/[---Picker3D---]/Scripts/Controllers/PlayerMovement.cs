@@ -19,7 +19,7 @@ namespace Picker3D.Player
         public void Move()
         {
             Vector3 direction = new Vector3(_horizontalSpeed * UIInput.Instance.GetHorizontal(), 0, _forwardSpeed);
-            _rigidbody.velocity = direction;
+            _rigidbody.MovePosition(_rigidbody.position + direction * Time.fixedDeltaTime);
         }
     }
 }
