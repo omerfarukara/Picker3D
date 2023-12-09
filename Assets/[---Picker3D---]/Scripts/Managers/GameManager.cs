@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GameManager : MonoBehaviour
+namespace Picker3D.Managers
 {
+    public class GameManager : MonoSingleton<GameManager>
+    {
+        
+    }
 }

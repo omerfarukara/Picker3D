@@ -1,12 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace Picker3D.Player
 {
-    private void Start()
+    public class PlayerController : MonoBehaviour
     {
-        print("asd");
+        [SerializeField] private Rigidbody rb;
+        [SerializeField] private float forwardSpeed, horizontalSpeed;
+
+        private PlayerMovement _movement;
+
+        private void Start()
+        {
+            _movement = new PlayerMovement(rb, forwardSpeed, horizontalSpeed);
+        }
+
+        private void FixedUpdate()
+        {
+            _movement.Move();
+        }
     }
 }
