@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Picker3D.PoolSystem
 {
-    public class PoolObject : MonoBehaviour
+    public abstract class PoolObject : MonoBehaviour
     {
+        [SerializeField] protected GameObject visualObject;
+        
+        public abstract void Build();
     }
 }

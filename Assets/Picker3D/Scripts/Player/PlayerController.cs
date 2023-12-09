@@ -24,6 +24,11 @@ namespace Picker3D.Player
             UIManager.OnStartButtonClicked += OnStartButtonClickedHandler;
         }
 
+        private void OnDisable()
+        {
+            UIManager.OnStartButtonClicked -= OnStartButtonClickedHandler;
+        }
+
         private void FixedUpdate()
         {
             if(!_canMove) return;

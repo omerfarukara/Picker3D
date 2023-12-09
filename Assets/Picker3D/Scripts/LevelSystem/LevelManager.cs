@@ -1,5 +1,7 @@
 using System;
+using Picker3D.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Picker3D.LevelSystem
@@ -8,32 +10,43 @@ namespace Picker3D.LevelSystem
     {
         private const string LevelKey = "Level";
 
-        [SerializeField] private GameObject[] levels;
+        [SerializeField] private LevelContentData levelContentData;
+        [SerializeField] private LevelObject levelObject;
+        
+        private LevelObject _currentLevelObject;
 
-        private GameObject _currentLevelObject;
+        private int _currentPlayedLevelCount = 0;
         
         /// <summary>
         /// Level is encapsulated.
         /// If the current level number is greater than the number of created level objects, this method returns a random level number.
         /// </summary>
-        public int Level
+        private int Level
         {
-            get => PlayerPrefs.GetInt(LevelKey, 1) > levels.Length ? Random.Range(1, levels.Length) : PlayerPrefs.GetInt(LevelKey, 1);
+            get => PlayerPrefs.GetInt(LevelKey, 1) > levelContentData.LevelCount ? Random.Range(1, levelContentData.LevelCount) : PlayerPrefs.GetInt(LevelKey, 1);
             set => PlayerPrefs.SetInt(LevelKey, value);
+        }
+
+        private void OnEnable()
+        {
+            UIManager.OnNextLevelButtonClicked += OnNextLevelHandler;
+        }
+
+        private void OnDisable()
+        {
+            UIManager.OnNextLevelButtonClicked -= OnNextLevelHandler;
         }
 
         private void Start()
         {
-            _currentLevelObject = levels[Level - 1];
-            _currentLevelObject.SetActive(true);
+            levelObject.Build(levelContentData.GetLevelObjectData(Level), _currentPlayedLevelCount);
         }
 
         private void OnNextLevelHandler()
         {
             Level++;
-            _currentLevelObject.SetActive(false);
-            _currentLevelObject = levels[Level - 1];
-            _currentLevelObject.SetActive(true);
+            _currentPlayedLevelCount++;
+            levelObject.Build(levelContentData.GetLevelObjectData(Level), _currentPlayedLevelCount);
         }
     }
 }
