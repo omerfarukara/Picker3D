@@ -14,19 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelStagesData:
   - stageType: 1
-    collectableType: 0
-    collectableCount: 2
-    requiredCollectableCount: 0
+    collectableType: 1
+    collectableCount: 10
+    requiredCollectableCount: 1
     positions:
-    - {x: 0, y: 0, z: 3}
-    - {x: 3, y: 0, z: 5}
-  - stageType: 0
-    collectableType: 0
-    collectableCount: 0
-    requiredCollectableCount: 0
-    positions: []
-  - stageType: 0
-    collectableType: 0
-    collectableCount: 0
-    requiredCollectableCount: 0
-    positions: []
+    - {x: 0, y: 0, z: 10}
+    - {x: -1, y: 0, z: 15}
+    - {x: 1, y: 0, z: 20}
+    - {x: -1, y: 0, z: 22}
+    - {x: 1, y: 0, z: 23}
+    - {x: 1, y: 0, z: 25}
+    - {x: -1, y: 0, z: 27}
+    - {x: 1, y: 0, z: 29}
+    - {x: -1, y: 0, z: 35}
+    - {x: 1, y: 0, z: 40}

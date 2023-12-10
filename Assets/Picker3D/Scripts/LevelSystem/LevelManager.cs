@@ -11,19 +11,21 @@ namespace Picker3D.LevelSystem
         private const string LevelKey = "Level";
 
         [SerializeField] private LevelContentData levelContentData;
-        [SerializeField] private LevelObject levelObject;
-        
+        [SerializeField] private LevelObject levelObjectPrefab;
+
         private LevelObject _currentLevelObject;
 
         private int _currentPlayedLevelCount = 0;
-        
+
         /// <summary>
         /// Level is encapsulated.
         /// If the current level number is greater than the number of created level objects, this method returns a random level number.
         /// </summary>
         private int Level
         {
-            get => PlayerPrefs.GetInt(LevelKey, 1) > levelContentData.LevelCount ? Random.Range(1, levelContentData.LevelCount) : PlayerPrefs.GetInt(LevelKey, 1);
+            get => PlayerPrefs.GetInt(LevelKey, 1) > levelContentData.LevelCount
+                ? Random.Range(1, levelContentData.LevelCount)
+                : PlayerPrefs.GetInt(LevelKey, 1);
             set => PlayerPrefs.SetInt(LevelKey, value);
         }
 
@@ -39,14 +41,14 @@ namespace Picker3D.LevelSystem
 
         private void Start()
         {
-            levelObject.Build(levelContentData.GetLevelObjectData(Level), _currentPlayedLevelCount);
+            levelObjectPrefab.Build(levelContentData.GetLevelObjectData(Level - 1), _currentPlayedLevelCount);
         }
 
         private void OnNextLevelHandler()
         {
             Level++;
             _currentPlayedLevelCount++;
-            levelObject.Build(levelContentData.GetLevelObjectData(Level), _currentPlayedLevelCount);
+            levelObjectPrefab.Build(levelContentData.GetLevelObjectData(Level - 1), _currentPlayedLevelCount);
         }
     }
 }

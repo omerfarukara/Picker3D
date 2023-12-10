@@ -1,4 +1,7 @@
 using System;
+using Picker3D.General;
+using Picker3D.Managers;
+using Picker3D.PoolSystem;
 using Picker3D.UI;
 using UnityEngine;
 
@@ -12,6 +15,7 @@ namespace Picker3D.Player
         private PlayerMovement _playerMovement;
 
         private bool _canMove;
+        private bool _canThrowCollectables;
 
         private void Awake()
         {
@@ -21,24 +25,68 @@ namespace Picker3D.Player
 
         private void OnEnable()
         {
-            UIManager.OnStartButtonClicked += OnStartButtonClickedHandler;
+            UIManager.OnStartButtonClicked += CanMoveTrue;
+            GameManager.OnStageThrowControl += OnStageThrowControlHandler;
+            GameManager.OnPassedStage += CanMoveTrue;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag(Constants.StageControlPoint))
+            {
+                GameManager.OnCompleteStage?.Invoke();
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (_canThrowCollectables && other.transform.parent.TryGetComponent(out PoolObject poolObject) && !poolObject.isThrow)
+            {
+                poolObject.Throw();
+            }
+        }
+        private void FixedUpdate()
+        {
+            if (!_canMove) return;
+
+            _playerMovement.Move();
         }
 
         private void OnDisable()
         {
-            UIManager.OnStartButtonClicked -= OnStartButtonClickedHandler;
+            UIManager.OnStartButtonClicked -= CanMoveTrue;
+            GameManager.OnStageThrowControl -= OnStageThrowControlHandler;
+            GameManager.OnPassedStage -= CanMoveTrue;
         }
 
-        private void FixedUpdate()
-        {
-            if(!_canMove) return;
-            
-            _playerMovement.Move();
-        }
-        
-        private void OnStartButtonClickedHandler()
+        private void CanMoveTrue()
         {
             _canMove = true;
+        }
+        private void CanMoveFalse()
+        {
+            _canMove = false;
+        }
+        private void CanThrowCollectableTrue()
+        {
+            _canThrowCollectables = true;
+            Invoke(nameof(TriggerPitCalculate),3);
+        }
+        private void OnStageThrowControlHandler()
+        {
+            CanMoveFalse();
+            CanThrowCollectableTrue();
+        }
+
+        private void TriggerPitCalculate()
+        {
+            CanThrowCollectableFalse();
+            GameManager.OnPitControl?.Invoke();
+        }
+        
+        private void CanThrowCollectableFalse()
+        {
+            _canThrowCollectables = false;
         }
     }
 }
