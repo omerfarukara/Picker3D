@@ -18,6 +18,11 @@ namespace Picker3D.StageObjects
             rigidbody.useGravity = true;
         }
 
+        public override void CloseObject()
+        {
+            visualObject.SetActive(false);
+        }
+
         private void OnCollisionEnter(Collision other)
         {
             if (other.collider.CompareTag("Ground"))

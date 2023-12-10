@@ -10,6 +10,12 @@ namespace Picker3D.StageObjects
         public override void Build()
         {
             UIManager.OnStartButtonClicked += OnStartButtonClickedHandler;
+            visualObject.SetActive(true);
+        }
+
+        public override void CloseObject()
+        {
+            visualObject.SetActive(false);
         }
 
         private void OnStartButtonClickedHandler()

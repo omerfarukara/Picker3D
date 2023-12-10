@@ -6,5 +6,6 @@ namespace Picker3D.UI
     {
         public static Action OnStartButtonClicked { get; set; }
         public static Action OnNextLevelButtonClicked { get; set; }
+        public static Action OnRestartLevelButtonClicked { get; set; }
     }
 }

@@ -44,20 +44,21 @@ namespace Picker3D.PoolSystem
 
             return null;
         }
-
-        public void ReturnToNormalCollectableObjectsQueue(PoolObject poolObject)
-        {
-            _poolNormalCollectableObjects.Enqueue(poolObject);
-        }
-
-        public void ReturnToBigCollectableObjectsQueue(PoolObject poolObject)
-        {
-            _poolNormalCollectableObjects.Enqueue(poolObject);
-        }
         
-        public void ReturnToDronesQueue(PoolObject poolObject)
+        public void ReturnToPool(PoolObject poolObject)
         {
-            _poolNormalCollectableObjects.Enqueue(poolObject);
+            switch (poolObject.StageType)
+            {
+                case StageType.NormalCollectable:
+                    _poolNormalCollectableObjects.Enqueue(poolObject);
+                    break;
+                case StageType.BigMultiplierCollectable:
+                    _poolBigCollectableObjects.Enqueue(poolObject);
+                    break;
+                case StageType.Drone:
+                    _poolDroneObjects.Enqueue(poolObject);
+                    break;
+            }
         }
     }
 }

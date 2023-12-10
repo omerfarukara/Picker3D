@@ -9,5 +9,10 @@ namespace Picker3D.StageObjects
         {
             visualObject.SetActive(true);
         }
+
+        public override void CloseObject()
+        {
+            visualObject.SetActive(false);
+        }
     }
 }

@@ -10,19 +10,35 @@ namespace Picker3D.LevelSystem
         [SerializeField] private StageType stageType;
         [SerializeField] private CollectableType collectableType;
         [SerializeField] private int collectableCount;
+        [SerializeField] private int requiredCollectableCount;
         [SerializeField] private Vector3[] positions;
-        
-        public LevelStageObjectData(StageType stageType, CollectableType collectableType, int collectableCount, Vector3[] positions)
+
+        public StageType StageType
         {
-            this.stageType = stageType;
-            this.collectableType = collectableType;
-            this.collectableCount = collectableCount;
-            this.positions = positions;
+            get => stageType;
+            set => stageType = value;
         }
-        
-        public StageType StageType => stageType;
-        public CollectableType CollectableType => collectableType;
-        public int CollectableCount => collectableCount;
-        public Vector3[] Positions => positions;
+        public CollectableType CollectableType
+        {
+            get => collectableType;
+            set => collectableType = value;
+        }
+
+        public int CollectableCount
+        {
+            get => collectableCount;
+            set => collectableCount = value;
+        }
+
+        public int RequiredCollectableCount
+        {
+            get => requiredCollectableCount;
+            set => requiredCollectableCount = value;
+        }
+        public Vector3[] Positions
+        {
+            get => positions;
+            set => positions = value;
+        }
     }
 }
