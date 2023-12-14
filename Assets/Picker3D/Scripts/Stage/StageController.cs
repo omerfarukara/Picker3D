@@ -23,7 +23,7 @@ namespace Picker3D.StageObjets
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(Constants.Collectable))
+            if (other.CompareTag(GameConstants.Collectable))
             {
                 _collectedObjectCount++;
             }

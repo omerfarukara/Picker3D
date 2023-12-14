@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Picker3D/Scenes/GameScene.unity
+    guid: cc952b9656c064668b4be9829dcb3c12
   m_configObjects: {}

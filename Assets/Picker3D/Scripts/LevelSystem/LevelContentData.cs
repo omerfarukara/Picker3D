@@ -13,5 +13,19 @@ namespace Picker3D.LevelSystem
         {
             return levelObjectsData[level];
         }
+
+        public void AddLevelObject(LevelObjectData levelObject)
+        {
+            LevelObjectData[] newLevelObjectsData = new LevelObjectData[levelObjectsData.Length + 1];
+
+            for (int i = 0; i < levelObjectsData.Length; i++)
+            {
+                newLevelObjectsData[i] = levelObjectsData[i];
+            }
+
+            newLevelObjectsData[^1] = levelObject;
+
+            levelObjectsData = newLevelObjectsData;
+        }
     }
 }

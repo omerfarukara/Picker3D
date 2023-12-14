@@ -11,7 +11,7 @@ namespace Picker3D.LevelSystem
         
         public void Build(LevelStageObjectData levelStageObjectData)
         {
-            for (int i = 0; i < levelStageObjectData.CollectableCount; i++)
+            for (int i = 0; i < levelStageObjectData.CollectableCount(); i++)
             {
                 PoolObject poolObject = PoolManager.Instance.GetPoolObject(levelStageObjectData.StageType);
 
@@ -20,7 +20,7 @@ namespace Picker3D.LevelSystem
             }
 
             stageController.Initialize();
-            stageController.RequiredCollectableCount = levelStageObjectData.RequiredCollectableCount;
+            stageController.RequiredCollectableCount = levelStageObjectData.RequiredCollectableCount();
         }
     }
 }

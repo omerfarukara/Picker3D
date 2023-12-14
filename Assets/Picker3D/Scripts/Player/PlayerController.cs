@@ -32,7 +32,7 @@ namespace Picker3D.Player
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(Constants.StageControlPoint))
+            if (other.CompareTag(GameConstants.StageControlPoint))
             {
                 GameManager.OnCompleteStage?.Invoke();
             }

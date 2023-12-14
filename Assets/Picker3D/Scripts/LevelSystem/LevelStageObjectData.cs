@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Picker3D.General;
+using Picker3D.LevelEditor;
 using Picker3D.LevelSystem;
 using UnityEngine;
 
@@ -8,37 +11,148 @@ namespace Picker3D.LevelSystem
     public class LevelStageObjectData
     {
         [SerializeField] private StageType stageType;
-        [SerializeField] private CollectableType collectableType;
-        [SerializeField] private int collectableCount;
-        [SerializeField] private int requiredCollectableCount;
+        [SerializeField] private CollectableType[] collectableTypes;
         [SerializeField] private Vector3[] positions;
 
+        /// <summary>
+        /// Level Stage Type : Normal, Big, Drone
+        /// </summary>
         public StageType StageType
         {
             get => stageType;
             set => stageType = value;
         }
-        public CollectableType CollectableType
+
+        /// <summary>
+        /// Scene positions of collectable objects
+        /// </summary>
+        public Vector3[] Positions => positions;
+
+        /// <summary>
+        /// Collectable types of collectable objects
+        /// </summary>
+        public CollectableType[] CollectableTypes => collectableTypes;
+        
+        /// <summary>
+        /// Count of collectable objects
+        /// </summary>
+        /// <returns> This method returned to count of collectable objects </returns>
+        public int CollectableCount()
         {
-            get => collectableType;
-            set => collectableType = value;
+            return collectableTypes.Length;
+        }
+        
+        /// <summary>
+        /// Required count of collectable objects
+        /// </summary>
+        /// <returns> Returns the number of objects required to pass the level. </returns>
+        public int RequiredCollectableCount()
+        {
+            return CollectableCount() * 80 / 100;
         }
 
-        public int CollectableCount
+        /// <summary>
+        /// It performs the recording of data.
+        /// </summary>
+        /// <param name="stageData"> Required class for data </param>
+        public void SetData(StageData stageData)
         {
-            get => collectableCount;
-            set => collectableCount = value;
+            stageType = stageData.StageType;
+
+            CollectableType[,] nodeData = stageData.CollectableNodeData;
+            
+            switch (stageType)
+            {
+                case StageType.None:
+                    break;
+                case StageType.NormalCollectable:
+                    SetNormalCollectables(nodeData);
+                    break;
+                case StageType.BigMultiplierCollectable:
+                    SetBigCollectables(nodeData);
+                    break;
+                case StageType.Drone:
+                    stageType = stageData.StageType;
+                    break;
+            }
         }
 
-        public int RequiredCollectableCount
+        public StageData GetStageData(int stageIndex)
         {
-            get => requiredCollectableCount;
-            set => requiredCollectableCount = value;
+            StageData newStageData = new StageData
+            {
+                StageType = stageType,
+                StageIndex = stageIndex
+            };
+
+            switch (stageType)
+            {
+                case StageType.None:
+                    break;
+                case StageType.NormalCollectable:
+                    newStageData.CollectableNodeData = new CollectableType[GameConstants.NormalColumnCount, GameConstants.NormalRowCount];
+                    break;
+                case StageType.BigMultiplierCollectable:
+                    newStageData.CollectableNodeData = new CollectableType[GameConstants.BigColumnCount, GameConstants.BigRowCount];
+                    break;
+                case StageType.Drone:
+                    break;
+            }
+            
+            return newStageData;
         }
-        public Vector3[] Positions
+        
+        /// <summary>
+        /// It processes the data and updates the appropriate variables.
+        /// </summary>
+        /// <param name="nodeData"></param>
+        private void SetNormalCollectables(CollectableType[,] nodeData)
         {
-            get => positions;
-            set => positions = value;
+            int rowCount = nodeData.GetLength(1);
+            int columnCount = nodeData.GetLength(0);
+            
+            List<Vector3> newPositions = new List<Vector3>();
+            List<CollectableType> newCollectableValues = new List<CollectableType>();
+            
+            for (int column = 0; column < columnCount; column++)
+            {
+                for (int row = 0; row < rowCount; row++)
+                {
+                    if (nodeData[column, row] == CollectableType.None) continue;
+
+                    Vector3 newPosition = new Vector3(column, 0.5f, row);
+                    newPositions.Add(newPosition);
+                    newCollectableValues.Add(nodeData[column, row]);
+                }
+            }
+
+            positions = newPositions.ToArray();
+            collectableTypes = newCollectableValues.ToArray();
+        }
+
+        /// <summary>
+        /// It processes the data and updates the appropriate variables.
+        /// </summary>
+        /// <param name="nodeData"></param>
+        private void SetBigCollectables(CollectableType[,] nodeData)
+        {
+            int rowCount = nodeData.GetLength(1);
+            int columnCount = nodeData.GetLength(0);
+            
+            List<Vector3> newPositions = new List<Vector3>();
+            
+            for (int column = 0; column < columnCount; column++)
+            {
+                for (int row = 0; row < rowCount; row++)
+                {
+                    if (nodeData[column, row] == CollectableType.None) continue;
+
+                    Vector3 newPosition = new Vector3(column, 5f, row);
+                    newPositions.Add(newPosition);
+                }
+            }
+
+            positions = newPositions.ToArray();
         }
     }
 }
