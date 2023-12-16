@@ -22,25 +22,11 @@ namespace Picker3D.LevelEditor.Editor
         private string _inputValue;
         private string _message;
 
-        [Obsolete("Obsolete")]
-        static LevelEditor()
-        {
-            EditorApplication.hierarchyWindowChanged += HierarchyWindowChangedHandler;
-        }
-        
         private static bool CheckInLevelEditorScene()
         {
             string currentSceneName = EditorSceneManager.GetActiveScene().name;
 
             return currentSceneName == GameConstants.LevelEditorSceneName;
-        }
-        
-        private static void HierarchyWindowChangedHandler()
-        {
-            if (CheckInLevelEditorScene())
-            {
-                GetWindow<LevelEditor>("Level Editor").Show();
-            }
         }
         
         [MenuItem("Level Editor / New Level")]

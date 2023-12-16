@@ -57,23 +57,13 @@ namespace Picker3D.LevelSystem
         /// <param name="stageData"> Required class for data </param>
         public void SetData(StageData stageData)
         {
-            stageType = stageData.StageType;
+            stageType = stageData.StageType + 1;
 
             CollectableType[,] nodeData = stageData.CollectableNodeData;
-            
-            switch (stageType)
+
+            if (stageType is StageType.NormalCollectable or StageType.BigMultiplierCollectable)
             {
-                case StageType.None:
-                    break;
-                case StageType.NormalCollectable:
-                    SetNormalCollectables(nodeData);
-                    break;
-                case StageType.BigMultiplierCollectable:
-                    SetBigCollectables(nodeData);
-                    break;
-                case StageType.Drone:
-                    stageType = stageData.StageType;
-                    break;
+                SetCollectables(nodeData);
             }
         }
 
@@ -82,31 +72,19 @@ namespace Picker3D.LevelSystem
             StageData newStageData = new StageData
             {
                 StageType = stageType,
-                StageIndex = stageIndex
+                StageIndex = stageIndex,
+                CollectableNodeData = GetCollectables()
             };
 
-            switch (stageType)
-            {
-                case StageType.None:
-                    break;
-                case StageType.NormalCollectable:
-                    newStageData.CollectableNodeData = new CollectableType[GameConstants.NormalColumnCount, GameConstants.NormalRowCount];
-                    break;
-                case StageType.BigMultiplierCollectable:
-                    newStageData.CollectableNodeData = new CollectableType[GameConstants.BigColumnCount, GameConstants.BigRowCount];
-                    break;
-                case StageType.Drone:
-                    break;
-            }
-            
             return newStageData;
         }
+        
         
         /// <summary>
         /// It processes the data and updates the appropriate variables.
         /// </summary>
         /// <param name="nodeData"></param>
-        private void SetNormalCollectables(CollectableType[,] nodeData)
+        private void SetCollectables(CollectableType[,] nodeData)
         {
             int rowCount = nodeData.GetLength(1);
             int columnCount = nodeData.GetLength(0);
@@ -134,25 +112,31 @@ namespace Picker3D.LevelSystem
         /// It processes the data and updates the appropriate variables.
         /// </summary>
         /// <param name="nodeData"></param>
-        private void SetBigCollectables(CollectableType[,] nodeData)
+        private CollectableType[,] GetCollectables()
         {
-            int rowCount = nodeData.GetLength(1);
-            int columnCount = nodeData.GetLength(0);
+            int columnCount = 0;
+            int rowCount = 0;
             
-            List<Vector3> newPositions = new List<Vector3>();
-            
-            for (int column = 0; column < columnCount; column++)
+            switch (stageType)
             {
-                for (int row = 0; row < rowCount; row++)
-                {
-                    if (nodeData[column, row] == CollectableType.None) continue;
-
-                    Vector3 newPosition = new Vector3(column, 5f, row);
-                    newPositions.Add(newPosition);
-                }
+                case StageType.NormalCollectable:
+                    columnCount = GameConstants.NormalColumnCount;
+                    rowCount = GameConstants.NormalRowCount;
+                    break;
+                case StageType.BigMultiplierCollectable:
+                    columnCount = GameConstants.BigColumnCount;
+                    rowCount = GameConstants.BigRowCount;
+                    break;
             }
 
-            positions = newPositions.ToArray();
+            CollectableType[,] nodeData = new CollectableType[columnCount, rowCount];
+
+            for (int i = 0; i < positions.Length; i++)
+            {
+                nodeData[(int)positions[i].x, (int)positions[i].z] = collectableTypes[i];
+            }
+            
+            return nodeData;
         }
     }
 }

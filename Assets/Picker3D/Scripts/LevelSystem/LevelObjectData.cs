@@ -10,8 +10,6 @@ namespace Picker3D.LevelSystem
     {
        [SerializeField] private LevelStageObjectData[] levelStagesData;
 
-       public int StageCount => levelStagesData.Length;
-
        public LevelStageObjectData[] LevelStageObjectsData => levelStagesData;
 
        public void SetLevelData(StageData[] stagesData)
@@ -20,6 +18,7 @@ namespace Picker3D.LevelSystem
 
            for (int i = 0; i < stagesData.Length; i++)
            {
+               Debug.Log($"Data {i} : {stagesData[i].StageType}");
                levelStagesData[i] = new LevelStageObjectData();
                levelStagesData[i].SetData(stagesData[i]);
            }
@@ -29,7 +28,7 @@ namespace Picker3D.LevelSystem
        {
            List<StageData> stagesData = new List<StageData>();
 
-           for (int i = 0; i < StageCount; i++)
+           for (int i = 0; i < levelStagesData.Length; i++)
            {
                stagesData.Add(levelStagesData[i].GetStageData(i));
            }

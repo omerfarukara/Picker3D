@@ -9,8 +9,14 @@ namespace Picker3D.LevelEditor.Editor
 {
     public class LevelEditorWindow : EditorWindow
     {
+        /// <summary>
+        /// Instance field of LevelEditorWindow class
+        /// </summary>
         private static LevelEditorWindow instance;
         
+        /// <summary>
+        /// Instance property of LevelEditorWindow class
+        /// </summary>
         public static LevelEditorWindow Instance 
         {
             get
@@ -22,12 +28,8 @@ namespace Picker3D.LevelEditor.Editor
                 return instance;
             } 
         }
-        
-        private int _currentLevel = 1;
 
-        private List<StageData> _stagesData = new List<StageData>();
-
-        #region Colors
+        #region Collectable Colors
 
         private readonly Color _emptyColor = new Color(0.22f, 0.21f, 0.24f);
         private readonly Color _cubeColor = new Color(0.53f, 0.02f, 0f);
@@ -36,51 +38,102 @@ namespace Picker3D.LevelEditor.Editor
         private readonly Color _triangleColor = new Color(0.26f, 0.44f, 1f);
 
         #endregion
-
+        
         #region For Toolbars
-
-        private int _currentStage;
-        private int _currentStageType;
-        private int _currentCollectableType;
-        private readonly List<string> _stagesToolbarOptions = new List<string>(); // Stages Toolbar Optinos
-
-        private readonly string[] _stageTypeToolbarOptions = new string[]
+        
+        /// <summary>
+        /// Toolbar options for stages (1, 2, etc)
+        /// </summary>
+        private readonly List<string> _stagesToolbarOptions = new List<string>();
+        /// <summary>
+        /// Toolbar options for stage types
+        /// </summary>
+        private readonly string[] _stageTypeToolbarOptions =
         {
             StageType.NormalCollectable.ToString(), StageType.BigMultiplierCollectable.ToString(),
             StageType.Drone.ToString()
         };
-
-        private readonly string[] _collectableTypeToolbarOptions = new string[]
+        /// <summary>
+        /// Toolbar options for collectable types
+        /// </summary>
+        private readonly string[] _collectableTypeToolbarOptions =
         {
             CollectableType.Cube.ToString(), CollectableType.Cylinder.ToString(), CollectableType.Sphere.ToString(),
             CollectableType.Triangle.ToString()
         };
-
+        
         #endregion
-
+        
+        /// <summary>
+        /// Data for stages in current level
+        /// </summary>
+        private List<StageData> _stagesData = new List<StageData>();
+        
+        /// <summary>
+        /// Currently editing level index
+        /// </summary>
+        private int _currentLevel = 1;
+        /// <summary>
+        /// Currently selected stage
+        /// </summary>
+        private int _currentStage;
+        /// <summary>
+        /// Currently selected stage type
+        /// </summary>
+        private int _currentStageType;
+        /// <summary>
+        /// Currently selected collectable type
+        /// </summary>
+        private int _currentCollectableType;
+        /// <summary>
+        /// Scroll view position value
+        /// </summary>
         private Vector2 _scrollPosition;
+        /// <summary>
+        /// Currently appropriate number of rows.
+        /// </summary>
         private int _rowCount;
+        /// <summary>
+        /// Current appropriate number of columns.
+        /// </summary>
         private int _columnCount;
         
+        /// <summary>
+        /// Open the editor window
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="isNewLevel"></param>
         public void ShowWindow(int level, bool isNewLevel)
         {
+            _currentLevel = level;
+
             if (!isNewLevel)
             {
                 GetData();
             }
             
-            _currentLevel = level;
-            
             GetWindow<LevelEditorWindow>("Level Editor Window");
         }
-
+        
+        /// <summary>
+        /// Get the data in level object data
+        /// </summary>
         private void GetData()
         {
-            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(GameConstants.LevelDataPath + $"/Level{_currentLevel}.asset");
+            string assetPathAndName = $"{GameConstants.LevelDataPath}/Level{_currentLevel}.asset";
             
             LevelObjectData levelObjectData = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelObjectData>(assetPathAndName);
 
             _stagesData = levelObjectData.GetLevelData();
+            
+            for (int i = 0; i < _stagesData.Count; i++)
+            {
+                _stagesToolbarOptions.Add($"{i + 1}");
+                _stagesData[i].StageType--;
+            }
+
+            UpdateRowAndColumn(_stagesData[0].StageType + 1);
+            SaveStageData();
         }
 
         private void OnEnable()
@@ -91,6 +144,9 @@ namespace Picker3D.LevelEditor.Editor
             }
         }
 
+        /// <summary>
+        /// Editor GUI handler (Unity event function)
+        /// </summary>
         private void OnGUI()
         {
             DrawInformation();
@@ -103,18 +159,27 @@ namespace Picker3D.LevelEditor.Editor
             DrawBoxes();
         }
 
+        /// <summary>
+        /// Draws the information of panel
+        /// </summary>
         private void DrawInformation()
         {
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             GUILayout.Box($"Level : {_currentLevel}");
-            GUILayout.Space(10);
-            GUILayout.Box($"Editing Stage: {_currentStage + 1}");
+            if (_stagesToolbarOptions.Count != 0)
+            {
+                GUILayout.Space(10);
+                GUILayout.Box($"Editing Stage: {_currentStage + 1}");
+            }
             GUILayout.Space(10);
             GUILayout.Box($"Stage Count = {_stagesToolbarOptions.Count}");
             GUILayout.EndHorizontal();
         }
-
+        
+        /// <summary>
+        /// Draws the stage stuff buttons and listen to GUI
+        /// </summary>
         private void DrawStageButtons()
         {
             GUILayout.BeginHorizontal();
@@ -122,27 +187,23 @@ namespace Picker3D.LevelEditor.Editor
 
             if (GUILayout.Button("Add Stage", GUILayout.Height(30)))
             {
+                SaveStageData();
+                
                 _stagesToolbarOptions.Add($"{_stagesToolbarOptions.Count + 1}");
-
+                _currentStage = _stagesToolbarOptions.Count -1;
+                _currentStageType = 0;
+                _currentCollectableType = 0;
+                
                 StageData newStageData = new StageData
                 {
-                    StageIndex = _stagesData.Count > 0 ? _currentStage : 0,
+                    StageIndex = _currentStage,
                     StageType = (StageType)_currentStageType,
                     CollectableNodeData = new CollectableType[GameConstants.NormalColumnCount, GameConstants.NormalRowCount]
                 };
                 
-                if (_stagesData.Count > 0)
-                {
-                    _stagesData[_currentStage].CollectableNodeData = new CollectableType[_columnCount, _rowCount];
-                    _stagesData[_currentStage].StageType = (StageType)_currentStageType;
-                }
-                
                 _stagesData.Add(newStageData);
                 _rowCount = GameConstants.NormalRowCount;
                 _columnCount = GameConstants.NormalColumnCount;
-                _currentStage = _stagesToolbarOptions.Count - 1;
-                _currentStageType = 0;
-                _currentCollectableType = 0;
             }
 
             GUILayout.Space(10);
@@ -155,7 +216,10 @@ namespace Picker3D.LevelEditor.Editor
             GUILayout.Space(10);
             GUILayout.EndHorizontal();
         }
-
+        
+        /// <summary>
+        /// Draws the stage toolbar and listen to GUI
+        /// </summary>
         private void DrawStageToolbar()
         {
             GUILayout.BeginHorizontal();
@@ -163,34 +227,25 @@ namespace Picker3D.LevelEditor.Editor
 
             int toolbarStage = GUILayout.Toolbar(_currentStage, _stagesToolbarOptions.ToArray());
 
-            if (toolbarStage != _currentStage)
+            if (toolbarStage != _currentStage) // Different stage selected
             {
-                // Yeni stage seçildi verileri kaydet!
-
-                // Yeni stage verilileri gelicek
                 StageData data = _stagesData[toolbarStage];
                 
-                if (_stagesData.Count > 0)
-                {
-                    _stagesData[_currentStage].CollectableNodeData = new CollectableType[_columnCount, _rowCount];
-                    _stagesData[_currentStage].StageType = (StageType)toolbarStage;
-                }
-
-                _rowCount = data.CollectableNodeData.GetLength(1);
-                _columnCount = data.CollectableNodeData.GetLength(0);
+                SaveStageData();
                 _currentStageType = (int)data.StageType;
+                UpdateRowAndColumn(data.StageType +1);
                 _currentCollectableType = 0;
 
                 DrawInformation();
             }
-
+            
             _currentStage = toolbarStage;
-
             GUILayout.EndHorizontal();
-
-            //DrawBoxes();
         }
-
+        
+        /// <summary>
+        /// Draws the stage type toolbar and listen to GUI
+        /// </summary>
         private void DrawStageType()
         {
             GUILayout.BeginHorizontal();
@@ -198,41 +253,20 @@ namespace Picker3D.LevelEditor.Editor
 
             int toolbarStage = GUILayout.Toolbar(_currentStageType, _stageTypeToolbarOptions);
 
-
-            if (toolbarStage != _currentStageType)
+            if (toolbarStage != _currentStageType) // Different stage type selected
             {
-                // Yeni stage type seçildi
+                UpdateRowAndColumn((StageType)toolbarStage + 1);
 
-                switch ((StageType)toolbarStage + 1)
-                {
-                    case StageType.None:
-                        break;
-                    case StageType.NormalCollectable:
-                        _rowCount = GameConstants.NormalColumnCount;
-                        _columnCount = GameConstants.NormalColumnCount;
-                        break;
-                    case StageType.BigMultiplierCollectable:
-                        _rowCount = GameConstants.BigRowCount;
-                        _columnCount = GameConstants.BigColumnCount;
-                        break;
-                    case StageType.Drone:
-                        _rowCount = 0;
-                        _columnCount = 0;
-                        break;
-                }
-
-                if (_stagesData.Count > 0)
-                {
-                    _stagesData[_currentStage].CollectableNodeData = new CollectableType[_columnCount, _rowCount];
-                    _stagesData[_currentStage].StageType = (StageType)toolbarStage;
-                }
-
-                _currentStageType = toolbarStage;
+                SaveStageData();
             }
+            _currentStageType = toolbarStage;
 
             GUILayout.EndHorizontal();
         }
-
+        
+        /// <summary>
+        /// Draws the collectable type toolbar and listen to GUI
+        /// </summary>
         private void DrawCollectableType()
         {
             GUILayout.BeginHorizontal();
@@ -240,16 +274,14 @@ namespace Picker3D.LevelEditor.Editor
 
             int toolbarStage = GUILayout.Toolbar(_currentCollectableType, _collectableTypeToolbarOptions);
 
-            if (toolbarStage != _currentCollectableType)
-            {
-                // Yeni collectable type seçildi
-            }
-
             _currentCollectableType = toolbarStage;
 
             GUILayout.EndHorizontal();
         }
-
+        
+        /// <summary>
+        /// Draws collectable information with colors
+        /// </summary>
         private void DrawCollectableInformation()
         {
             GUILayout.BeginHorizontal();
@@ -268,7 +300,10 @@ namespace Picker3D.LevelEditor.Editor
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
         }
-
+        
+        /// <summary>
+        /// Draws boxes for collectables in map
+        /// </summary>
         private void DrawBoxes()
         {
             if (_stagesData.Count == 0) return;
@@ -300,7 +335,12 @@ namespace Picker3D.LevelEditor.Editor
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
         }
-
+        
+        /// <summary>
+        /// Draw one box and listen to GUI
+        /// </summary>
+        /// <param name="column"> column index </param>
+        /// <param name="row"> row index </param>
         private void DrawColoredBox(int column, int row)
         {
             int width = _currentStageType + 1 == (int)StageType.NormalCollectable ? 15 : 50;
@@ -324,10 +364,8 @@ namespace Picker3D.LevelEditor.Editor
 
             EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y, boxRect.width, 1), Color.black); // Top
             EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y, 1, boxRect.height), Color.black); // Left
-            EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y + boxRect.height - 1, boxRect.width, 1),
-                Color.black); // Bottom
-            EditorGUI.DrawRect(new Rect(boxRect.x + boxRect.width - 1, boxRect.y, 1, boxRect.height),
-                Color.black); // Right
+            EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y + boxRect.height - 1, boxRect.width, 1), Color.black); // Bottom
+            EditorGUI.DrawRect(new Rect(boxRect.x + boxRect.width - 1, boxRect.y, 1, boxRect.height), Color.black); // Right
 
             if (Event.current.type != EventType.MouseDown || !boxRect.Contains(Event.current.mousePosition)) return;
 
@@ -343,6 +381,9 @@ namespace Picker3D.LevelEditor.Editor
             Repaint();
         }
 
+        /// <summary>
+        /// Draws the level buttons and listen to GUI
+        /// </summary>
         private void DrawLevelButtons()
         {
             GUILayout.BeginHorizontal();
@@ -350,11 +391,46 @@ namespace Picker3D.LevelEditor.Editor
             
             if (GUILayout.Button("Save Level", GUILayout.MaxWidth(100), GUILayout.Height(30)))
             {
+                SaveStageData();
                 LevelRecorder.SaveLevel(_currentLevel, _stagesData.ToArray());
                 Close();
             }
 
             GUILayout.EndHorizontal();
+        }
+        
+        /// <summary>
+        /// Updates the row and column count
+        /// </summary>
+        /// <param name="stageType"></param>
+        private void UpdateRowAndColumn(StageType stageType)
+        {
+            int rowCount = 0;
+            int columnCount = 0;
+                
+            switch (stageType)
+            {
+                case StageType.NormalCollectable:
+                    rowCount = GameConstants.NormalRowCount;
+                    columnCount = GameConstants.NormalColumnCount;
+                    break;
+                case StageType.BigMultiplierCollectable:
+                    rowCount = GameConstants.BigRowCount;
+                    columnCount = GameConstants.BigColumnCount;
+                    break;
+            }
+            _rowCount = rowCount;
+            _columnCount = columnCount;
+        }
+        
+        /// <summary>
+        /// Saves the stage data, within the entered data.
+        /// </summary>
+        private void SaveStageData()
+        {
+            if (_stagesData.Count == 0) return;
+            
+            _stagesData[_currentStage].StageType = (StageType)_currentStageType;
         }
     }
 }
