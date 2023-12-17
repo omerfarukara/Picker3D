@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1170167694632998409}
   - component: {fileID: 7680811830271245040}
   - component: {fileID: 2812510696250239954}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Collectable
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8778366901505691462}
   - component: {fileID: 3439770161725859941}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: NormalCollectable
   m_TagString: Collectable
   m_Icon: {fileID: 0}
@@ -196,15 +196,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageType: 1
-  visualObject: {fileID: 9219415623259205543}
-  force: 40
   visualObjects:
   - {fileID: 5689943472374427697}
   - {fileID: 2812510696250239954}
   - {fileID: 5448605174249921395}
   - {fileID: 6572524145345044140}
-  meshRenderer: {fileID: 3561456865707199824}
+  isManualGravity: 1
   gravityScale: 0.075
+  force: 40
 --- !u!1 &1026832859496155306
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +218,7 @@ GameObject:
   - component: {fileID: 9200061753411611042}
   - component: {fileID: 3828697863052662480}
   - component: {fileID: 5448605174249921395}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Triangle
   m_TagString: Collectable
   m_Icon: {fileID: 0}
@@ -367,7 +366,7 @@ GameObject:
   - component: {fileID: 5190587106269718306}
   - component: {fileID: 2919032601754513528}
   - component: {fileID: 6572524145345044140}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Collectable
   m_Icon: {fileID: 0}
@@ -515,7 +514,7 @@ GameObject:
   - component: {fileID: 2870234873422888909}
   - component: {fileID: 6581932386048132547}
   - component: {fileID: 5689943472374427697}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Collectable
   m_Icon: {fileID: 0}

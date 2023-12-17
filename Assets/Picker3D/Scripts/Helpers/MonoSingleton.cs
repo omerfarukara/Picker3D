@@ -1,27 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+namespace Picker3D.Scripts.Helpers
 {
-    private static volatile T instance = null;
-
-    public static T Instance => instance;
-
-    protected virtual void Awake()
+    public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        Singleton();
-    }
+        private static volatile T instance = null;
 
-    private void Singleton()
-    {
-        if (instance == null)
+        public static T Instance => instance;
+
+        protected virtual void Awake()
         {
-            instance = this as T;
+            Singleton();
         }
-        else
+
+        private void Singleton()
         {
-            Destroy(gameObject);
+            if (instance == null)
+            {
+                instance = this as T;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

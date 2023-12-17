@@ -10,8 +10,9 @@ namespace Picker3D.LevelSystem
         [SerializeField] private Transform collectableParent;
         [SerializeField] private StageController stageController;
 
-        public void Build(LevelStageObjectData levelStageObjectData)
+        public void Build(LevelStageObjectData levelStageObjectData, int index)
         {
+            transform.position = Vector3.forward * index * 65;
             switch (levelStageObjectData.StageType)
             {
                 case StageType.None:
@@ -25,7 +26,7 @@ namespace Picker3D.LevelSystem
                 case StageType.Drone:
                     break;
             }
-            
+
             CollectableParentProcess();
 
             stageController.Initialize();
@@ -55,7 +56,7 @@ namespace Picker3D.LevelSystem
                 poolObject.Build();
             }
         }
-        
+
         private void BigCollectableBuild(LevelStageObjectData levelStageObjectData)
         {
             for (int i = 0; i < levelStageObjectData.CollectableCount(); i++)
@@ -63,17 +64,15 @@ namespace Picker3D.LevelSystem
                 PoolObject poolObject = PoolManager.Instance.GetPoolObject(levelStageObjectData.StageType);
 
 
-                Vector3 newPosition = new Vector3(levelStageObjectData.Positions[i].x / 6,
+                Vector3 newPosition = new Vector3(levelStageObjectData.Positions[i].x * 3 - 3f,
                     levelStageObjectData.Positions[i].y,
-                    levelStageObjectData.Positions[i].z / 6);
+                    levelStageObjectData.Positions[i].z * 3);
 
                 poolObject.transform.parent = collectableParent;
                 poolObject.transform.position = newPosition;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
                 poolObject.Build();
             }
-
         }
-
     }
 }

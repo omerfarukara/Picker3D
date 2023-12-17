@@ -4,6 +4,7 @@ using Picker3D.General;
 using Picker3D.LevelSystem;
 using Picker3D.Managers;
 using Picker3D.PoolSystem;
+using Picker3D.Scripts.StageObjets;
 using Picker3D.Stage;
 using Picker3D.StageObjects;
 using TMPro;
@@ -21,7 +22,7 @@ namespace Picker3D.StageObjets
         private int _collectedObjectCount;
         public int RequiredCollectableCount { get; set; }
 
-        private readonly List<BaseCollectableObject> _collectableObjects = new List<BaseCollectableObject>();
+        private readonly List<VisualStageObject> _collectableObjects = new List<VisualStageObject>();
         private bool _calculateCompleted;
 
         private void OnEnable()
@@ -33,18 +34,18 @@ namespace Picker3D.StageObjets
         {
             if (other.CompareTag(GameConstants.Collectable))
             {
-                if (other.transform.parent.TryGetComponent(out BaseCollectableObject baseCollectableObject))
+                if (other.TryGetComponent(out VisualStageObject visualStageObject))
                 {
-                    _collectableObjects.Add(baseCollectableObject);
+                    _collectableObjects.Add(visualStageObject);
                 }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.transform.parent.TryGetComponent(out BaseCollectableObject baseCollectableObject))
+            if (other.TryGetComponent(out VisualStageObject visualStageObject))
             {
-                _collectableObjects.Remove(baseCollectableObject);
+                _collectableObjects.Remove(visualStageObject);
             }
         }
 
@@ -88,11 +89,11 @@ namespace Picker3D.StageObjets
 
         private void CollectablesProcess()
         {
-            foreach (BaseCollectableObject baseCollectable in _collectableObjects)
+            foreach (VisualStageObject visualStageObject in _collectableObjects)
             {
-                NormalCollectable obj = baseCollectable.GetComponent<NormalCollectable>();
-                obj.ColorChange(stageMeshRenderer.sharedMaterial);
-                obj.Explode();
+                NormalCollectable normalCollectable = visualStageObject.transform.parent.GetComponent<NormalCollectable>();
+                normalCollectable.ColorChange(stageMeshRenderer.sharedMaterial);
+                normalCollectable.Explode();
             }
 
             _calculateCompleted = true;

@@ -2,13 +2,14 @@ using System;
 using Picker3D.General;
 using Picker3D.Managers;
 using Picker3D.PoolSystem;
+using Picker3D.Scripts.Helpers;
 using Picker3D.StageObjects;
 using Picker3D.UI;
 using UnityEngine;
 
 namespace Picker3D.Player
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoSingleton<PlayerController>
     {
         [SerializeField] private float forwardSpeed, horizontalSpeed;
 
@@ -18,8 +19,9 @@ namespace Picker3D.Player
         private bool _canMove;
         private bool _canThrowCollectables;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _rigidbody = GetComponentInChildren<Rigidbody>();
             _playerMovement = new PlayerMovement(_rigidbody, forwardSpeed, horizontalSpeed);
         }

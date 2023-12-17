@@ -1,5 +1,6 @@
 using System;
 using Picker3D.PoolSystem;
+using Picker3D.Scripts.StageObjets;
 using Picker3D.UI;
 using UnityEngine;
 

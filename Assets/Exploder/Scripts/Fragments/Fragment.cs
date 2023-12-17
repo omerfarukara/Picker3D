@@ -20,56 +20,47 @@ namespace Exploder
         /// <summary>
         /// if this fragment is cracked and ready for explosion
         /// </summary>
-        [NonSerialized]
-        public bool Cracked;
+        [NonSerialized] public bool Cracked;
 
         /// <summary>
         /// flag if this fragment is visible from main camera
         /// </summary>
-        [NonSerialized]
-        public bool Visible;
+        [NonSerialized] public bool Visible;
 
         /// <summary>
         /// is this fragment active
         /// </summary>
-        [NonSerialized]
-        public bool IsActive;
+        [NonSerialized] public bool IsActive;
 
         /// <summary>
         /// mesh renderer component for faster access
         /// </summary>
-        [NonSerialized]
-        public MeshRenderer meshRenderer;
+        [NonSerialized] public MeshRenderer meshRenderer;
 
         /// <summary>
         /// mesh collider component for faster access
         /// </summary>
-        [NonSerialized]
-        public MeshCollider meshCollider;
+        [NonSerialized] public MeshCollider meshCollider;
 
         /// <summary>
         /// mesh filter component for faster access
         /// </summary>
-        [NonSerialized]
-        public MeshFilter meshFilter;
+        [NonSerialized] public MeshFilter meshFilter;
 
         /// <summary>
         /// box collider component for faster access
         /// </summary>
-        [NonSerialized]
-        public BoxCollider boxCollider;
+        [NonSerialized] public BoxCollider boxCollider;
 
         /// <summary>
         /// custom 2d collider when exploding 2d objects
         /// </summary>
-        [NonSerialized]
-        public PolygonCollider2D polygonCollider2D;
+        [NonSerialized] public PolygonCollider2D polygonCollider2D;
 
         /// <summary>
         /// optional audio source on this fragment
         /// </summary>
-        [NonSerialized]
-        public AudioSource audioSource;
+        [NonSerialized] public AudioSource audioSource;
 
         private ParticleSystem[] particleSystems;
         private GameObject particleChild;
@@ -90,6 +81,7 @@ namespace Exploder
             {
                 return rigid2D.IsSleeping();
             }
+
             return rigidBody.IsSleeping();
         }
 
@@ -201,6 +193,7 @@ namespace Exploder
                     {
                         Object.Destroy(meshCollider);
                     }
+
                     if (boxCollider)
                     {
                         Object.Destroy(boxCollider);
@@ -239,7 +232,8 @@ namespace Exploder
         /// <summary>
         /// apply physical explosion to fragment piece
         /// </summary>
-        public void ApplyExplosion(ExploderTransform meshTransform, Vector3 centroid, float force, GameObject original, ExploderParams set)
+        public void ApplyExplosion(ExploderTransform meshTransform, Vector3 centroid, float force, GameObject original,
+            ExploderParams set)
         {
             this.settings = set;
 
@@ -274,7 +268,10 @@ namespace Exploder
             }
 
             var forceVector = (meshTransform.TransformPoint(centroid) - settings.Position).normalized;
-            var angularVelocity = settings.FragmentOptions.AngularVelocity * (settings.FragmentOptions.RandomAngularVelocityVector ? Random.onUnitSphere : settings.FragmentOptions.AngularVelocityVector);
+            var angularVelocity = settings.FragmentOptions.AngularVelocity *
+                                  (settings.FragmentOptions.RandomAngularVelocityVector
+                                      ? Random.onUnitSphere
+                                      : settings.FragmentOptions.AngularVelocityVector);
 
             if (settings.UseForceVector)
             {
@@ -313,7 +310,10 @@ namespace Exploder
             }
 
             Vector2 forceVector = (meshTransform.TransformPoint(centroid) - settings.Position).normalized;
-            float angularVelocity = settings.FragmentOptions.AngularVelocity * (settings.FragmentOptions.RandomAngularVelocityVector ? Random.insideUnitCircle.x : settings.FragmentOptions.AngularVelocityVector.y);
+            float angularVelocity = settings.FragmentOptions.AngularVelocity *
+                                    (settings.FragmentOptions.RandomAngularVelocityVector
+                                        ? Random.insideUnitCircle.x
+                                        : settings.FragmentOptions.AngularVelocityVector.y);
 
             if (settings.UseForceVector)
             {
@@ -478,7 +478,7 @@ namespace Exploder
                     }
                     else
                     {
-                        var t = deactivateTimer/settings.FragmentDeactivation.DeactivateTimeout;
+                        var t = deactivateTimer / settings.FragmentDeactivation.DeactivateTimeout;
 
                         switch (settings.FragmentDeactivation.FadeoutOptions)
                         {
@@ -489,10 +489,11 @@ namespace Exploder
                                     color.a = t;
                                     meshRenderer.material.color = color;
                                 }
+
                                 break;
 
                             case FadeoutOptions.ScaleDown:
-                                gameObject.transform.localScale = originalScale*t;
+                                gameObject.transform.localScale = originalScale * t;
                                 break;
                         }
                     }

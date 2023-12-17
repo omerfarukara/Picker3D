@@ -9,8 +9,6 @@ namespace Picker3D.PoolSystem
     {
         [SerializeField] protected StageType stageType;
         
-        protected GameObject visualObject;
-
         public CollectableType CollectableType { get; set; }
 
         public StageType StageType => stageType;

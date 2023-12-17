@@ -1,6 +1,9 @@
 using System;
+using Picker3D.General;
 using Picker3D.LevelSystem;
+using Picker3D.Player;
 using Picker3D.PoolSystem;
+using Picker3D.Scripts.StageObjets;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,36 +11,26 @@ namespace Picker3D.StageObjects
 {
     public class BigMultiplierCollectable : BaseCollectableObject
     {
-        [SerializeField] private int minFragment;
-        [SerializeField] private int maxFragment;
+        [SerializeField] private float fallDistance;
         
-        public override void Build()
-        {
-            base.Build();
-            //Rigidbody.useGravity = true;
-        }
+        [SerializeField] internal int minFragment;
+        [SerializeField] internal int maxFragment;
 
-        private void OnCollisionEnter(Collision other)
+        private void Update()
         {
-            if (other.collider.CompareTag("Ground"))
+            if (!Rigidbody.useGravity &&
+                transform.position.z - PlayerController.Instance.transform.position.z <
+                fallDistance)
             {
-                Multiply();
+                Rigidbody.useGravity = true;
             }
         }
 
-        private void Multiply()
+        public override void FixedUpdate()
         {
-            int fragment = Random.Range(minFragment, maxFragment);
-
-            for (int i = 0; i < fragment; i++)
-            {
-                PoolObject normalPoolObject = PoolManager.Instance.GetPoolObject(StageType.NormalCollectable);
-                float localScale = visualObject.transform.localScale.x;
-                float positionX = Random.Range(-localScale, localScale);
-                float positionZ = Random.Range(-localScale, localScale);
-                normalPoolObject.transform.position = transform.position + new Vector3(positionX, 0 , positionZ);
-                normalPoolObject.Build();
-            }
+            if (!Rigidbody.useGravity) return;
+            
+            base.FixedUpdate();
         }
     }
 }

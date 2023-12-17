@@ -1,19 +1,44 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Exploder.Utils;
-using Picker3D.LevelSystem;
 using Picker3D.PoolSystem;
 using Picker3D.Scripts.StageObjets;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class BaseCollectableObject : PoolObject
 {
-    [SerializeField] private List<VisualStageObject> visualObjects;
+    [SerializeField] protected List<VisualStageObject> visualObjects;
 
-    protected  Rigidbody Rigidbody { get; set; }
+    [SerializeField] private bool isManualGravity;
+
+    [ShowIf(nameof(IsManualGravity))] [SerializeField]
+    private float gravityScale;
+
+
+    protected bool IsManualGravity
+    {
+        get => isManualGravity;
+        set => isManualGravity = value;
+    }
+
+
+    protected float GravityScale
+    {
+        get => gravityScale;
+        set => gravityScale = value;
+    }
+
     public bool IsThrow { get; protected set; }
-    
+    protected Rigidbody Rigidbody { get; set; }
+
+
+    public virtual void FixedUpdate()
+    {
+        if (Rigidbody == null || !IsManualGravity) return;
+        Vector3 velocity = Rigidbody.velocity;
+        velocity.y -= gravityScale;
+        Rigidbody.velocity = velocity;
+    }
 
     public virtual void Explode()
     {
@@ -26,7 +51,6 @@ public class BaseCollectableObject : PoolObject
         {
             if (visual.CollectableType == CollectableType)
             {
-                visualObject = visual.gameObject;
                 visual.gameObject.SetActive(true);
                 Rigidbody = GetComponentInChildren<Rigidbody>();
             }
