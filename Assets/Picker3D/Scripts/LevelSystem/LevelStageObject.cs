@@ -7,8 +7,10 @@ namespace Picker3D.LevelSystem
 {
     public class LevelStageObject : MonoBehaviour
     {
-        [SerializeField] private Transform collectableParent;
+        [SerializeField] private Transform mainGround;
         [SerializeField] private StageController stageController;
+
+        private Transform _collectableParent;
 
         public void Build(LevelStageObjectData levelStageObjectData, int index)
         {
@@ -35,9 +37,12 @@ namespace Picker3D.LevelSystem
 
         private void CollectableParentProcess()
         {
-            collectableParent.transform.localPosition = Vector3.up * -0.75f;
-            collectableParent.transform.localScale = new Vector3(-1, 1, 1);
-            collectableParent.transform.localRotation = Quaternion.Euler(Vector3.up * 180);
+            _collectableParent.parent = mainGround;
+            _collectableParent.localPosition = Vector3.up * 0.75f;
+            Vector3 localScale = _collectableParent.localScale;
+            localScale = new Vector3(-localScale.x, localScale.y, localScale.z);
+            _collectableParent.localScale = localScale;
+            _collectableParent.localRotation = Quaternion.Euler(Vector3.up * 180);
         }
 
         private void NormalCollectableBuild(LevelStageObjectData levelStageObjectData)
@@ -50,8 +55,20 @@ namespace Picker3D.LevelSystem
                     levelStageObjectData.Positions[i].y,
                     levelStageObjectData.Positions[i].z / 2);
 
-                poolObject.transform.parent = collectableParent;
+                if (_collectableParent == null)
+                {
+                    _collectableParent = new GameObject
+                    {
+                        name = "CollectableParent",
+                    }.transform;
+                }
+
+                _collectableParent.parent = null;
+                _collectableParent.position = Vector3.zero;
+                _collectableParent.rotation = Quaternion.identity;
+                
                 poolObject.transform.position = newPosition;
+                poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
                 poolObject.Build();
             }
@@ -63,13 +80,24 @@ namespace Picker3D.LevelSystem
             {
                 PoolObject poolObject = PoolManager.Instance.GetPoolObject(levelStageObjectData.StageType);
 
-
                 Vector3 newPosition = new Vector3(levelStageObjectData.Positions[i].x * 3 - 3f,
                     levelStageObjectData.Positions[i].y,
                     levelStageObjectData.Positions[i].z * 3);
 
-                poolObject.transform.parent = collectableParent;
+                if (_collectableParent == null)
+                {
+                    _collectableParent = new GameObject
+                    {
+                        name = "CollectableParent",
+                    }.transform;
+                }
+                
+                _collectableParent.parent = null;
+                _collectableParent.position = Vector3.zero;
+                _collectableParent.rotation = Quaternion.identity;
+                
                 poolObject.transform.position = newPosition;
+                poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
                 poolObject.Build();
             }

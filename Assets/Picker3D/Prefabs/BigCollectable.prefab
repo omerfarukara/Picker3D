@@ -216,7 +216,7 @@ MonoBehaviour:
   - {fileID: 6572524145345044140}
   isManualGravity: 1
   gravityScale: 0.1
-  fallDistance: 15
+  fallDistance: 10
   minFragment: 4
   maxFragment: 5
 --- !u!1 &1026832859496155306
