@@ -60,13 +60,24 @@ namespace Picker3D.LevelSystem
         {
             stageType = stageData.StageType + 1;
 
-            CollectableType[,] nodeData = stageData.CollectableNodeData;
+            CollectableType[,] nodeData;
 
-            if (stageType is StageType.NormalCollectable or StageType.BigMultiplierCollectable)
+            if (stageType is not (StageType.NormalCollectable or StageType.BigMultiplierCollectable)) return;
+            
+            float yPosition;
+                
+            if (stageType == StageType.NormalCollectable)
             {
-                float y = stageType == LevelSystem.StageType.NormalCollectable ? 0.5f : 5f;
-                SetCollectables(nodeData, y);
+                yPosition = 0.5f;
+                nodeData = stageData.NormalCollectableNodeData;
             }
+            else
+            {
+                yPosition = 5f;
+                nodeData = stageData.BigCollectableNodeData;
+            }
+                
+            SetCollectables(nodeData, yPosition);
         }
 
         public StageData GetStageData(int stageIndex)
@@ -75,7 +86,8 @@ namespace Picker3D.LevelSystem
             {
                 StageType = stageType,
                 StageIndex = stageIndex,
-                CollectableNodeData = GetCollectables()
+                NormalCollectableNodeData = GetCollectables(),
+                BigCollectableNodeData = GetCollectables()
             };
 
             return newStageData;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Picker3D.General;
 using Picker3D.LevelSystem;
 using UnityEditor;
@@ -132,7 +133,10 @@ namespace Picker3D.LevelEditor.Editor
                 _stagesData[i].StageType--;
             }
 
-            UpdateRowAndColumn(_stagesData[0].StageType + 1);
+            if (_stagesData.Count== 0) return;
+            
+            _currentStageType = (int)_stagesData[0].StageType;
+            
             SaveStageData();
         }
 
@@ -198,7 +202,7 @@ namespace Picker3D.LevelEditor.Editor
                 {
                     StageIndex = _currentStage,
                     StageType = (StageType)_currentStageType,
-                    CollectableNodeData = new CollectableType[GameConstants.NormalColumnCount, GameConstants.NormalRowCount]
+                    NormalCollectableNodeData = new CollectableType[GameConstants.NormalColumnCount, GameConstants.NormalRowCount]
                 };
                 
                 _stagesData.Add(newStageData);
@@ -233,7 +237,6 @@ namespace Picker3D.LevelEditor.Editor
                 
                 SaveStageData();
                 _currentStageType = (int)data.StageType;
-                UpdateRowAndColumn(data.StageType +1);
                 _currentCollectableType = 0;
 
                 DrawInformation();
@@ -255,9 +258,6 @@ namespace Picker3D.LevelEditor.Editor
 
             if (toolbarStage != _currentStageType) // Different stage type selected
             {
-                UpdateRowAndColumn((StageType)toolbarStage + 1);
-                _stagesData[_currentStage].CollectableNodeData = new CollectableType[_columnCount, _rowCount];
-
                 SaveStageData();
             }
             _currentStageType = toolbarStage;
@@ -321,37 +321,56 @@ namespace Picker3D.LevelEditor.Editor
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
             GUILayout.BeginVertical();
 
-            for (int i = 0; i < _columnCount; i++)
+            if (_currentStageType + 1 == (int)StageType.NormalCollectable)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Space(10);
-                for (int j = 0; j < _rowCount; j++)
+                for (int i = 0; i < GameConstants.NormalColumnCount; i++)
                 {
-                    DrawColoredBox(i, j);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Space(10);
+                
+                    for (int j = 0; j < GameConstants.NormalRowCount; j++)
+                    {
+                        DrawNormalColoredBox(i, j);
+                    }
+
+                    GUILayout.EndHorizontal();
                 }
-
-                GUILayout.EndHorizontal();
             }
+            else if(_currentStageType + 1 == (int)StageType.BigMultiplierCollectable)
+            {
+                for (int i = 0; i < GameConstants.BigColumnCount; i++)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Space(10);
+                
+                    for (int j = 0; j < GameConstants.BigRowCount; j++)
+                    {
+                        DrawBigColoredBox(i, j);
+                    }
 
+                    GUILayout.EndHorizontal();
+                }
+            }
+            
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
         }
         
         /// <summary>
-        /// Draw one box and listen to GUI
+        /// Draw one normal box and listen to GUI
         /// </summary>
         /// <param name="column"> column index </param>
         /// <param name="row"> row index </param>
-        private void DrawColoredBox(int column, int row)
+        private void DrawNormalColoredBox(int column, int row)
         {
-            int width = _currentStageType + 1 == (int)StageType.NormalCollectable ? 15 : 50;
-            int height = _currentStageType + 1 == (int)StageType.NormalCollectable ? 15 : 50;
+            const int width = 15;
+            const int height = 15;
 
             Rect boxRect = GUILayoutUtility.GetRect(width, height, GUILayout.MaxWidth(width), GUILayout.MaxHeight(height));
 
             StageData stageData = _stagesData[_currentStage];
 
-            Color color = stageData.CollectableNodeData[column, row] switch
+            Color color = stageData.NormalCollectableNodeData[column, row] switch
             {
                 CollectableType.None => _emptyColor,
                 CollectableType.Cube => _cubeColor,
@@ -370,18 +389,63 @@ namespace Picker3D.LevelEditor.Editor
 
             if (Event.current.type != EventType.MouseDown || !boxRect.Contains(Event.current.mousePosition)) return;
 
-            if (stageData.CollectableNodeData[column, row] == (CollectableType)_currentCollectableType + 1)
+            if (stageData.NormalCollectableNodeData[column, row] == (CollectableType)_currentCollectableType + 1)
             {
-                stageData.CollectableNodeData[column, row] = CollectableType.None;
+                stageData.NormalCollectableNodeData[column, row] = CollectableType.None;
             }
             else
             {
-                stageData.CollectableNodeData[column, row] = (CollectableType)_currentCollectableType + 1;
+                stageData.NormalCollectableNodeData[column, row] = (CollectableType)_currentCollectableType + 1;
             }
 
             Repaint();
         }
 
+        /// <summary>
+        /// Draw one big box and listen to GUI
+        /// </summary>
+        /// <param name="column"> column index </param>
+        /// <param name="row"> row index </param>
+        private void DrawBigColoredBox(int column, int row)
+        {
+            const int width = 50;
+            const int height = 50;
+
+            Rect boxRect = GUILayoutUtility.GetRect(width, height, GUILayout.MaxWidth(width), GUILayout.MaxHeight(height));
+
+            StageData stageData = _stagesData[_currentStage];
+
+            Color color = stageData.BigCollectableNodeData[column, row] switch
+            {
+                CollectableType.None => _emptyColor,
+                CollectableType.Cube => _cubeColor,
+                CollectableType.Cylinder => _cylinderColor,
+                CollectableType.Sphere => _sphereColor,
+                CollectableType.Triangle => _triangleColor,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            EditorGUI.DrawRect(boxRect, color);
+
+            EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y, boxRect.width, 1), Color.black); // Top
+            EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y, 1, boxRect.height), Color.black); // Left
+            EditorGUI.DrawRect(new Rect(boxRect.x, boxRect.y + boxRect.height - 1, boxRect.width, 1), Color.black); // Bottom
+            EditorGUI.DrawRect(new Rect(boxRect.x + boxRect.width - 1, boxRect.y, 1, boxRect.height), Color.black); // Right
+
+            if (Event.current.type != EventType.MouseDown || !boxRect.Contains(Event.current.mousePosition)) return;
+
+            if (stageData.BigCollectableNodeData[column, row] == (CollectableType)_currentCollectableType + 1)
+            {
+                stageData.BigCollectableNodeData[column, row] = CollectableType.None;
+            }
+            else
+            {
+                stageData.BigCollectableNodeData[column, row] = (CollectableType)_currentCollectableType + 1;
+            }
+
+            Repaint();
+        }
+        
         /// <summary>
         /// Draws the level buttons and listen to GUI
         /// </summary>
@@ -398,32 +462,6 @@ namespace Picker3D.LevelEditor.Editor
             }
 
             GUILayout.EndHorizontal();
-        }
-        
-        /// <summary>
-        /// Updates the row and column count
-        /// </summary>
-        /// <param name="stageType"></param>
-        private void UpdateRowAndColumn(StageType stageType)
-        {
-            int rowCount = 0;
-            int columnCount = 0;
-                
-            switch (stageType)
-            {
-                case StageType.NormalCollectable:
-                    rowCount = GameConstants.NormalRowCount;
-                    columnCount = GameConstants.NormalColumnCount;
-                    break;
-                case StageType.BigMultiplierCollectable:
-                    rowCount = GameConstants.BigRowCount;
-                    columnCount = GameConstants.BigColumnCount;
-                    break;
-            }
-            
-            _rowCount = rowCount;
-            _columnCount = columnCount;
-            
         }
         
         /// <summary>

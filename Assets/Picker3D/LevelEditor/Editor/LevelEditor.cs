@@ -1,4 +1,5 @@
 using System;
+using log4net.Core;
 using Picker3D.General;
 using Picker3D.LevelSystem;
 using UnityEditor;
@@ -86,23 +87,28 @@ namespace Picker3D.LevelEditor.Editor
 
             if (GUILayout.Button("Edit Level"))
             {
-                int level = Convert.ToInt16(_inputValue);
-                
-                if (level > 0 && level <= lastLevelIndex)
+                if (!int.TryParse(_inputValue, out int level))
                 {
-                    LevelEditorWindow.Instance.ShowWindow(level, false);
-                    Close();
+                    _inputValue = "";
+                    _message = $"Please enter a valid level number. Current level range: 1 - {lastLevelIndex}.";
                 }
                 else
                 {
-                    _inputValue = "";
-                    _message = $"The entered level was not found. Current level range: 1 - {lastLevelIndex}.";
+                    if (level > 0 && level <= lastLevelIndex)
+                    {
+                        LevelEditorWindow.Instance.ShowWindow(level, false);
+                        Close();
+                    }
+                    else
+                    {
+                        _inputValue = "";
+                        _message = $"The entered level was not found. Current level range: 1 - {lastLevelIndex}.";
+                    }
                 }
             }
             
             GUILayout.EndHorizontal();
             GUILayout.Label(_message);
-
         }
     }
 }
