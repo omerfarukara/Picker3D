@@ -16,10 +16,9 @@ namespace Picker3D.Stage
             {
                 doorController.OpenDoor();
 
-                if (LevelManager.Instance.levelContentData.levelObjectsData[LevelManager.Instance.Level - 1]
-                        .levelStagesData.Length == LevelManager.Instance.CurrentPlayedStage)
+                if (LevelManager.Instance.AllStageIsComplete())
                 {
-                    GameManager.OnCompleteStage?.Invoke();
+                    GameManager.OnCompleteLevel?.Invoke();
                 }
                 else
                 {

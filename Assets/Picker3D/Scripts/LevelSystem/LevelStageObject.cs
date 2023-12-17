@@ -12,10 +12,13 @@ namespace Picker3D.LevelSystem
         [SerializeField] private Transform mainGround;
         [SerializeField] private StageController stageController;
 
+        private Action<LevelStageObject> _onComplete;
         private Transform _collectableParent;
 
-        public void Build(LevelStageObjectData levelStageObjectData, int index)
+        public void Build(LevelStageObjectData levelStageObjectData, int index, Action<LevelStageObject> onComplete)
         {
+            _onComplete = onComplete;
+            
             transform.position = Vector3.forward * index * 65;
             switch (levelStageObjectData.StageType)
             {
@@ -72,6 +75,7 @@ namespace Picker3D.LevelSystem
                 poolObject.transform.position = newPosition;
                 poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
+                poolObject.gameObject.SetActive(true);
                 poolObject.Build();
             }
         }
@@ -101,25 +105,33 @@ namespace Picker3D.LevelSystem
                 poolObject.transform.position = newPosition;
                 poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
+                poolObject.gameObject.SetActive(true);
                 poolObject.Build();
             }
         }
 
         private void OnEnable()
         {
-            UIManager.OnNextLevelButtonClicked += Destroy;
-            UIManager.OnRestartLevelButtonClicked += Destroy;
+            GameManager.OnCompleteLevel += OnCompleteLevelHandler;
+            UIManager.OnNextLevelButtonClicked += OnLevelChangeHandler;
+            UIManager.OnRestartLevelButtonClicked += OnLevelChangeHandler;
         }
 
         private void OnDisable()
         {
-            UIManager.OnNextLevelButtonClicked -= Destroy;
-            UIManager.OnRestartLevelButtonClicked += Destroy;
+            GameManager.OnCompleteLevel -= OnCompleteLevelHandler;
+            UIManager.OnNextLevelButtonClicked -= OnLevelChangeHandler;
+            UIManager.OnRestartLevelButtonClicked -= OnLevelChangeHandler;
+        }
+        
+        private void OnCompleteLevelHandler()
+        {
+            _onComplete?.Invoke(this);
         }
 
-        private void Destroy()
+        private void OnLevelChangeHandler()
         {
-            gameObject.SetActive(false);
+            stageController.ResetStage();
         }
     }
 }

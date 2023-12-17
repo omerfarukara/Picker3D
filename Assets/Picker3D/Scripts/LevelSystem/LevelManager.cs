@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Picker3D.Managers;
 using Picker3D.Player;
 using Picker3D.Scripts.Helpers;
@@ -56,7 +57,7 @@ namespace Picker3D.LevelSystem
             _currentPlayedLevelCount++;
             LevelSpawn();
         }
-        
+
         private void OnCompleteStageHandler()
         {
             CurrentPlayedStage++;
@@ -66,7 +67,20 @@ namespace Picker3D.LevelSystem
         {
             PlayerController.Instance.ResetPosition();
             CurrentPlayedStage = 0;
-            levelObjectPrefab.Build(levelContentData.GetLevelObjectData(Level - 1), _currentPlayedLevelCount);
+
+            if (_currentLevelObject == null)
+            {
+                _currentLevelObject = Instantiate(levelObjectPrefab);
+            }
+
+            _currentLevelObject.Build(levelContentData.GetLevelObjectData(Level - 1), _currentPlayedLevelCount);
+        }
+
+        public bool AllStageIsComplete()
+        {
+            int currentLevelStageCount = levelContentData.levelObjectsData[Level - 1].levelStagesData.Length;
+            bool allStageIsComplete = currentLevelStageCount == CurrentPlayedStage;
+            return allStageIsComplete;
         }
     }
 }

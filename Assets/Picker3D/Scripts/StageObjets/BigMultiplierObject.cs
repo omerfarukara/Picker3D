@@ -10,8 +10,12 @@ namespace Picker3D.StageObjets
 {
     public class BigMultiplierObject : MonoBehaviour
     {
+        [SerializeField] private CollectableType collectableType;
+        
         private BigMultiplierCollectable _bigMultiplierCollectable;
         private int _minFragment, _maxFragment;
+
+        public CollectableType CollectableType => collectableType;
 
         private void OnEnable()
         {
@@ -40,6 +44,7 @@ namespace Picker3D.StageObjets
                 float positionX = Random.Range(-localScale, localScale);
                 float positionZ = Random.Range(-localScale, localScale);
                 normalPoolObject.transform.position = transform.position + new Vector3(positionX, 0, positionZ);
+                normalPoolObject.gameObject.SetActive(true);
                 normalPoolObject.Build();
             }
 

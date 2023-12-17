@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5799106280951587348}
   - component: {fileID: 3462403163286527689}
   - component: {fileID: 1170167694632998409}
-  - component: {fileID: 7680811830271245040}
+  - component: {fileID: 2602477117261901021}
   - component: {fileID: 2812510696250239954}
   - component: {fileID: 7156371509814199870}
   m_Layer: 7
@@ -114,8 +114,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
---- !u!65 &7680811830271245040
-BoxCollider:
+--- !u!64 &2602477117261901021
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -132,9 +132,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &2812510696250239954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectableType: 1
+  collectedMaterial: {fileID: 2100000, guid: e16e0bb54db3f4200b2986f58ee3b183, type: 2}
+  nonCollectedMaterial: {fileID: 2100000, guid: ff9d46d1f00f3a14591ee7001e807aae,
+    type: 2}
 --- !u!114 &7156371509814199870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5ae24ea807446998914c60fc555620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectableType: 1
 --- !u!1 &883342044683173773
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +221,7 @@ MonoBehaviour:
   - {fileID: 6572524145345044140}
   isManualGravity: 1
   gravityScale: 0.1
+  bigVisualObjects: []
   fallDistance: 10
   minFragment: 4
   maxFragment: 5
@@ -368,6 +374,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectableType: 4
+  collectedMaterial: {fileID: 2100000, guid: e16e0bb54db3f4200b2986f58ee3b183, type: 2}
+  nonCollectedMaterial: {fileID: 2100000, guid: ff9d46d1f00f3a14591ee7001e807aae,
+    type: 2}
 --- !u!114 &4808306485578854707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5ae24ea807446998914c60fc555620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectableType: 4
 --- !u!1 &5696538642311587819
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,6 +539,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectableType: 2
+  collectedMaterial: {fileID: 2100000, guid: e16e0bb54db3f4200b2986f58ee3b183, type: 2}
+  nonCollectedMaterial: {fileID: 2100000, guid: ff9d46d1f00f3a14591ee7001e807aae,
+    type: 2}
 --- !u!114 &818030083189989157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -541,6 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5ae24ea807446998914c60fc555620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectableType: 2
 --- !u!1 &9219415623259205543
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,6 +703,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectableType: 3
+  collectedMaterial: {fileID: 2100000, guid: e16e0bb54db3f4200b2986f58ee3b183, type: 2}
+  nonCollectedMaterial: {fileID: 2100000, guid: ff9d46d1f00f3a14591ee7001e807aae,
+    type: 2}
 --- !u!114 &4320162162598604407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,3 +718,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5ae24ea807446998914c60fc555620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectableType: 3

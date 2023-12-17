@@ -5,7 +5,7 @@ using Picker3D.Scripts.StageObjets;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class BaseCollectableObject : PoolObject
+public abstract class BaseCollectableObject : PoolObject
 {
     [SerializeField] protected List<VisualStageObject> visualObjects;
 
@@ -30,20 +30,16 @@ public class BaseCollectableObject : PoolObject
 
     public bool IsThrow { get; protected set; }
     protected Rigidbody Rigidbody { get; set; }
-
-
-    public virtual void FixedUpdate()
+    
+    protected virtual void FixedUpdate()
     {
-        if (Rigidbody == null || !IsManualGravity) return;
+        if (Rigidbody == null || !IsManualGravity || !Rigidbody.useGravity) return;
         Vector3 velocity = Rigidbody.velocity;
         velocity.y -= gravityScale;
         Rigidbody.velocity = velocity;
     }
 
-    public virtual void Explode()
-    {
-        ExploderSingleton.Instance.ExplodeObject(gameObject);
-    }
+    protected abstract void OnBuild();
 
     public override void Build()
     {
@@ -52,13 +48,15 @@ public class BaseCollectableObject : PoolObject
             if (visual.CollectableType == CollectableType)
             {
                 visual.gameObject.SetActive(true);
-                Rigidbody = GetComponentInChildren<Rigidbody>();
+                visual.Build();
+                Rigidbody = visual.Rigidbody;
             }
             else
             {
                 visual.gameObject.SetActive(false);
             }
         }
+        OnBuild();
     }
 
     public override void CloseObject()

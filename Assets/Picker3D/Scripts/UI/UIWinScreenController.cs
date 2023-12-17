@@ -12,7 +12,7 @@ namespace Picker3D.UI
 
         private void OnEnable()
         {
-            GameManager.OnCompleteStage += OnWinLevelHandler;
+            GameManager.OnCompleteLevel += OnWinLevelHandler;
         }
         
         private void Awake()
@@ -22,7 +22,7 @@ namespace Picker3D.UI
 
         private void OnDisable()
         {
-            GameManager.OnCompleteStage -= OnWinLevelHandler;
+            GameManager.OnCompleteLevel -= OnWinLevelHandler;
         }
 
 

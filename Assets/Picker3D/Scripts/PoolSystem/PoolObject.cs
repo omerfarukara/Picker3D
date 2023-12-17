@@ -1,5 +1,6 @@
 using System;
 using Picker3D.LevelSystem;
+using Picker3D.Managers;
 using Picker3D.UI;
 using UnityEngine;
 
@@ -13,21 +14,25 @@ namespace Picker3D.PoolSystem
 
         public StageType StageType => stageType;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
-            UIManager.OnNextLevelButtonClicked += ReturnToPool;
-            UIManager.OnRestartLevelButtonClicked += ReturnToPool;
+            GameManager.OnCompleteLevel += OnCompleteLevelHandler;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
-            UIManager.OnNextLevelButtonClicked -= ReturnToPool;
-            UIManager.OnRestartLevelButtonClicked -= ReturnToPool;
+            GameManager.OnCompleteLevel += OnCompleteLevelHandler;
         }
 
         private void ReturnToPool()
         {
+            gameObject.SetActive(false);
             PoolManager.Instance.ReturnToPool(this);
+        }
+        
+        private void OnCompleteLevelHandler()
+        {
+            ReturnToPool();
         }
 
         public abstract void Build();

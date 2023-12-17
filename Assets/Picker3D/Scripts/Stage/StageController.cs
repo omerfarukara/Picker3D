@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Picker3D.General;
 using Picker3D.Managers;
@@ -72,10 +73,8 @@ namespace Picker3D.StageObjets
         {
             foreach (VisualStageObject visualStageObject in _collectableObjects)
             {
-                NormalCollectable normalCollectable =
-                    visualStageObject.transform.parent.GetComponent<NormalCollectable>();
-                normalCollectable.ColorChange(stageMeshRenderer.sharedMaterial);
-                normalCollectable.Explode();
+                visualStageObject.ColorChange(true);
+                visualStageObject.Explode();
             }
 
             Invoke(nameof(Passed), 1);
@@ -85,6 +84,12 @@ namespace Picker3D.StageObjets
         {
             _calculateCompleted = true;
             pitController.MoveUp();
+        }
+
+        public void ResetStage()
+        {
+            pitController.MoveDown();
+            doorController.CloseDoor();
         }
     }
 }

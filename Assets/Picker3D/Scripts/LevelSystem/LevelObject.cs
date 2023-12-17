@@ -9,7 +9,7 @@ namespace Picker3D.LevelSystem
         [SerializeField] private LevelStageObject levelStageObjectPrefab;
 
         private readonly Queue<LevelStageObject> _levelStageObjects = new Queue<LevelStageObject>();
-
+        
         public void Build(LevelObjectData levelObjectData, int currentPlayedLevelCount)
         {
             transform.position = Vector3.forward * currentPlayedLevelCount;
@@ -19,10 +19,10 @@ namespace Picker3D.LevelSystem
             for (int i = 0; i < levelObjectData.LevelStageObjectsData.Length; i++)
             {
                 LevelStageObjectData levelStageObjectData = levelObjectData.LevelStageObjectsData[i];
-                GetNewLevelStageObject().Build(levelStageObjectData, i);
+                GetNewLevelStageObject().Build(levelStageObjectData, i, ReturnToQueue);
             }
         }
-
+        
         private LevelStageObject GetNewLevelStageObject()
         {
             if (_levelStageObjects.Count != 0) return _levelStageObjects.Dequeue();
@@ -31,6 +31,11 @@ namespace Picker3D.LevelSystem
             _levelStageObjects.Enqueue(newLevelStageObject);
 
             return _levelStageObjects.Dequeue();
+        }
+
+        private void ReturnToQueue(LevelStageObject levelStageObject)
+        {
+            _levelStageObjects.Enqueue(levelStageObject);
         }
     }
 }
