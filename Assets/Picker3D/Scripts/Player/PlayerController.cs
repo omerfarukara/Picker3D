@@ -2,6 +2,7 @@ using System;
 using Picker3D.General;
 using Picker3D.Managers;
 using Picker3D.PoolSystem;
+using Picker3D.StageObjects;
 using Picker3D.UI;
 using UnityEngine;
 
@@ -40,9 +41,9 @@ namespace Picker3D.Player
 
         private void OnTriggerStay(Collider other)
         {
-            if (_canThrowCollectables && other.transform.parent.TryGetComponent(out PoolObject poolObject) && !poolObject.isThrow)
+            if (_canThrowCollectables && other.transform.parent.TryGetComponent(out NormalCollectable normalCollectableObj) && !normalCollectableObj.IsThrow)
             {
-                poolObject.Throw();
+                normalCollectableObj.Throw();
             }
         }
         private void FixedUpdate()
@@ -70,7 +71,7 @@ namespace Picker3D.Player
         private void CanThrowCollectableTrue()
         {
             _canThrowCollectables = true;
-            Invoke(nameof(TriggerPitCalculate),3);
+            Invoke(nameof(TriggerPitCalculate),1);
         }
         private void OnStageThrowControlHandler()
         {

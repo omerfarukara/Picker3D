@@ -5,17 +5,12 @@ using UnityEngine;
 
 namespace Picker3D.StageObjects
 {
-    public class Drone : PoolObject
+    public class Drone : BaseCollectableObject
     {
         public override void Build()
         {
+            base.Build();
             UIManager.OnStartButtonClicked += OnStartButtonClickedHandler;
-            visualObject.SetActive(true);
-        }
-
-        public override void CloseObject()
-        {
-            visualObject.SetActive(false);
         }
 
         private void OnStartButtonClickedHandler()

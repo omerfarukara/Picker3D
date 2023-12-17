@@ -13,6 +13,7 @@ namespace Picker3D.LevelSystem
         [SerializeField] private StageType stageType;
         [SerializeField] private CollectableType[] collectableTypes;
         [SerializeField] private Vector3[] positions;
+        [SerializeField] private int requirementCollectableCountPercent;
 
         /// <summary>
         /// Level Stage Type : Normal, Big, Drone
@@ -32,7 +33,7 @@ namespace Picker3D.LevelSystem
         /// Collectable types of collectable objects
         /// </summary>
         public CollectableType[] CollectableTypes => collectableTypes;
-        
+
         /// <summary>
         /// Count of collectable objects
         /// </summary>
@@ -41,14 +42,14 @@ namespace Picker3D.LevelSystem
         {
             return collectableTypes.Length;
         }
-        
+
         /// <summary>
         /// Required count of collectable objects
         /// </summary>
         /// <returns> Returns the number of objects required to pass the level. </returns>
         public int RequiredCollectableCount()
         {
-            return CollectableCount() * 80 / 100;
+            return CollectableCount() * requirementCollectableCountPercent / 100;
         }
 
         /// <summary>
@@ -63,7 +64,8 @@ namespace Picker3D.LevelSystem
 
             if (stageType is StageType.NormalCollectable or StageType.BigMultiplierCollectable)
             {
-                SetCollectables(nodeData);
+                float y = stageType == LevelSystem.StageType.NormalCollectable ? 0.5f : 5f;
+                SetCollectables(nodeData, y);
             }
         }
 
@@ -78,27 +80,28 @@ namespace Picker3D.LevelSystem
 
             return newStageData;
         }
-        
-        
+
+
         /// <summary>
         /// It processes the data and updates the appropriate variables.
         /// </summary>
         /// <param name="nodeData"></param>
-        private void SetCollectables(CollectableType[,] nodeData)
+        /// <param name="yPosition"></param>
+        private void SetCollectables(CollectableType[,] nodeData, float yPosition)
         {
             int rowCount = nodeData.GetLength(1);
             int columnCount = nodeData.GetLength(0);
-            
+
             List<Vector3> newPositions = new List<Vector3>();
             List<CollectableType> newCollectableValues = new List<CollectableType>();
-            
+
             for (int column = 0; column < columnCount; column++)
             {
                 for (int row = 0; row < rowCount; row++)
                 {
                     if (nodeData[column, row] == CollectableType.None) continue;
 
-                    Vector3 newPosition = new Vector3(column, 0.5f, row);
+                    Vector3 newPosition = new Vector3(row, yPosition, column);
                     newPositions.Add(newPosition);
                     newCollectableValues.Add(nodeData[column, row]);
                 }
@@ -116,7 +119,7 @@ namespace Picker3D.LevelSystem
         {
             int columnCount = 0;
             int rowCount = 0;
-            
+
             switch (stageType)
             {
                 case StageType.NormalCollectable:
@@ -133,9 +136,9 @@ namespace Picker3D.LevelSystem
 
             for (int i = 0; i < positions.Length; i++)
             {
-                nodeData[(int)positions[i].x, (int)positions[i].z] = collectableTypes[i];
+                nodeData[(int)positions[i].z, (int)positions[i].x] = collectableTypes[i];
             }
-            
+
             return nodeData;
         }
     }

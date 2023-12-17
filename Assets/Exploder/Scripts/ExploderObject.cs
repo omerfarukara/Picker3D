@@ -18,7 +18,7 @@ namespace Exploder
         /// name of the tag for destroyable objects
         /// only objects with this tag can be destroyed, other objects are ignored
         /// </summary>
-        public static string Tag = "Exploder";
+        public static string Tag = "Collectable";
 
         /// <summary>
         /// flag for not tagging Explodable objects

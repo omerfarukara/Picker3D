@@ -256,6 +256,7 @@ namespace Picker3D.LevelEditor.Editor
             if (toolbarStage != _currentStageType) // Different stage type selected
             {
                 UpdateRowAndColumn((StageType)toolbarStage + 1);
+                _stagesData[_currentStage].CollectableNodeData = new CollectableType[_columnCount, _rowCount];
 
                 SaveStageData();
             }
@@ -419,8 +420,10 @@ namespace Picker3D.LevelEditor.Editor
                     columnCount = GameConstants.BigColumnCount;
                     break;
             }
+            
             _rowCount = rowCount;
             _columnCount = columnCount;
+            
         }
         
         /// <summary>

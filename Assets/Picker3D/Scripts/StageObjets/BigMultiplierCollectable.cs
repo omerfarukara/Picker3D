@@ -6,21 +6,15 @@ using Random = UnityEngine.Random;
 
 namespace Picker3D.StageObjects
 {
-    public class BigMultiplierCollectable : PoolObject
+    public class BigMultiplierCollectable : BaseCollectableObject
     {
-        [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private int minFragment;
         [SerializeField] private int maxFragment;
         
         public override void Build()
         {
-            visualObject.SetActive(true);
-            rigidbody.useGravity = true;
-        }
-
-        public override void CloseObject()
-        {
-            visualObject.SetActive(false);
+            base.Build();
+            //Rigidbody.useGravity = true;
         }
 
         private void OnCollisionEnter(Collision other)
