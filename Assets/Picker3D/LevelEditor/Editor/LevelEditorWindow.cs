@@ -69,6 +69,16 @@ namespace Picker3D.LevelEditor.Editor
         /// Data for stages in current level
         /// </summary>
         private List<StageData> _stagesData = new List<StageData>();
+
+        /// <summary>
+        /// Game object component in the editor scene to preview level items.
+        /// </summary>
+        private LevelPreview _levelPreview;
+        
+        /// <summary>
+        /// Scroll view position value
+        /// </summary>
+        private Vector2 _scrollPosition;
         
         /// <summary>
         /// Currently editing level index
@@ -86,18 +96,6 @@ namespace Picker3D.LevelEditor.Editor
         /// Currently selected collectable type
         /// </summary>
         private int _currentCollectableType;
-        /// <summary>
-        /// Scroll view position value
-        /// </summary>
-        private Vector2 _scrollPosition;
-        /// <summary>
-        /// Currently appropriate number of rows.
-        /// </summary>
-        private int _rowCount;
-        /// <summary>
-        /// Current appropriate number of columns.
-        /// </summary>
-        private int _columnCount;
         
         /// <summary>
         /// Open the editor window
@@ -206,8 +204,6 @@ namespace Picker3D.LevelEditor.Editor
                 };
                 
                 _stagesData.Add(newStageData);
-                _rowCount = GameConstants.NormalRowCount;
-                _columnCount = GameConstants.NormalColumnCount;
             }
 
             GUILayout.Space(10);
@@ -454,13 +450,25 @@ namespace Picker3D.LevelEditor.Editor
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             
+            if (GUILayout.Button("Preview", GUILayout.MaxWidth(100), GUILayout.Height(30)))
+            {
+                if (_levelPreview == null)
+                {
+                    _levelPreview = GameObject.FindFirstObjectByType<LevelPreview>();
+                }
+                
+                _levelPreview.Preview(_stagesData.ToArray());
+            }
+
+            GUILayout.Space(10);
+            
             if (GUILayout.Button("Save Level", GUILayout.MaxWidth(100), GUILayout.Height(30)))
             {
                 SaveStageData();
                 LevelRecorder.SaveLevel(_currentLevel, _stagesData.ToArray());
                 Close();
             }
-
+            
             GUILayout.EndHorizontal();
         }
         
