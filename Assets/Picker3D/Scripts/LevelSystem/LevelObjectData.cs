@@ -8,7 +8,7 @@ namespace Picker3D.LevelSystem
     [CreateAssetMenu(fileName = "LevelObject01", menuName = "Game Data/Level Object Data")]
     public class LevelObjectData : ScriptableObject
     {
-       [SerializeField] private LevelStageObjectData[] levelStagesData;
+       [SerializeField] internal LevelStageObjectData[] levelStagesData;
 
        public LevelStageObjectData[] LevelStageObjectsData => levelStagesData;
 

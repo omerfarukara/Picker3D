@@ -7,8 +7,7 @@ namespace Picker3D.Managers
     {
         public static Action OnCompleteStage { get; set; }
         public static Action OnPassedStage { get; set; }
+
         public static Action OnFailedStage { get; set; }
-        public static Action OnStageThrowControl { get; set; }
-        public static Action OnPitControl { get; set; }
     }
 }

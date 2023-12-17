@@ -1034,7 +1034,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 247
 --- !u!114 &826473249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2650,7 +2650,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level Failed!
+  m_text: Level Completed!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac274af6a29ce4b29ac0cee9f8b174a3, type: 2}
   m_sharedMaterial: {fileID: 8690591861142563998, guid: ac274af6a29ce4b29ac0cee9f8b174a3,

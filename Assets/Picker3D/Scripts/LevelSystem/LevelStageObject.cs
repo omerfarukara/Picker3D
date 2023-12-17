@@ -1,6 +1,8 @@
 using System;
+using Picker3D.Managers;
 using Picker3D.PoolSystem;
 using Picker3D.StageObjets;
+using Picker3D.UI;
 using UnityEngine;
 
 namespace Picker3D.LevelSystem
@@ -66,7 +68,7 @@ namespace Picker3D.LevelSystem
                 _collectableParent.parent = null;
                 _collectableParent.position = Vector3.zero;
                 _collectableParent.rotation = Quaternion.identity;
-                
+
                 poolObject.transform.position = newPosition;
                 poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
@@ -91,16 +93,33 @@ namespace Picker3D.LevelSystem
                         name = "CollectableParent",
                     }.transform;
                 }
-                
+
                 _collectableParent.parent = null;
                 _collectableParent.position = Vector3.zero;
                 _collectableParent.rotation = Quaternion.identity;
-                
+
                 poolObject.transform.position = newPosition;
                 poolObject.transform.parent = _collectableParent;
                 poolObject.CollectableType = levelStageObjectData.CollectableTypes[i];
                 poolObject.Build();
             }
+        }
+
+        private void OnEnable()
+        {
+            UIManager.OnNextLevelButtonClicked += Destroy;
+            UIManager.OnRestartLevelButtonClicked += Destroy;
+        }
+
+        private void OnDisable()
+        {
+            UIManager.OnNextLevelButtonClicked -= Destroy;
+            UIManager.OnRestartLevelButtonClicked += Destroy;
+        }
+
+        private void Destroy()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

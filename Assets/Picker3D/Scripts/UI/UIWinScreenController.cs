@@ -1,4 +1,5 @@
 using System;
+using Picker3D.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,21 @@ namespace Picker3D.UI
         [SerializeField] private GameObject panel;
         [SerializeField] private Button nextLevelButton;
 
+        private void OnEnable()
+        {
+            GameManager.OnCompleteStage += OnWinLevelHandler;
+        }
+        
         private void Awake()
         {
             nextLevelButton.onClick.AddListener(ButtonNextLevelClick);
         }
+
+        private void OnDisable()
+        {
+            GameManager.OnCompleteStage -= OnWinLevelHandler;
+        }
+
 
         private void OnWinLevelHandler()
         {

@@ -12,4 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cdb797fc6484abba300e0248ef957d, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  levelStagesData: []
+  levelStagesData:
+  - stageType: 1
+    collectableTypes: 0100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+    positions:
+    - {x: 4, y: 0.5, z: 15}
+    - {x: 14, y: 0.5, z: 15}
+    - {x: 9, y: 0.5, z: 16}
+    - {x: 5, y: 0.5, z: 19}
+    - {x: 10, y: 0.5, z: 20}
+    - {x: 2, y: 0.5, z: 21}
+    - {x: 5, y: 0.5, z: 21}
+    - {x: 10, y: 0.5, z: 21}
+    - {x: 3, y: 0.5, z: 22}
+    - {x: 10, y: 0.5, z: 22}
+    - {x: 15, y: 0.5, z: 22}
+    - {x: 11, y: 0.5, z: 25}
+    - {x: 5, y: 0.5, z: 26}
+    - {x: 13, y: 0.5, z: 27}
+    requirementCollectableCountPercent: 10
+  - stageType: 2
+    collectableTypes: 020000000200000002000000020000000200000002000000
+    positions:
+    - {x: 2, y: 5, z: 2}
+    - {x: 0, y: 5, z: 3}
+    - {x: 2, y: 5, z: 4}
+    - {x: 1, y: 5, z: 6}
+    - {x: 2, y: 5, z: 7}
+    - {x: 0, y: 5, z: 8}
+    requirementCollectableCountPercent: 10

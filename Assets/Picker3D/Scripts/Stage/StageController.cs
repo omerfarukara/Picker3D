@@ -22,11 +22,6 @@ namespace Picker3D.StageObjets
         private readonly List<VisualStageObject> _collectableObjects = new List<VisualStageObject>();
         private bool _calculateCompleted;
 
-        private void OnEnable()
-        {
-            GameManager.OnPitControl += CalculatePit;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(GameConstants.Collectable))
@@ -52,27 +47,16 @@ namespace Picker3D.StageObjets
             pitText.text = $"{_collectableObjects.Count}/{RequiredCollectableCount}";
         }
 
-        private void OnDisable()
-        {
-            GameManager.OnPitControl -= CalculatePit;
-        }
-
         public void Initialize()
         {
             _collectedObjectCount = 0;
             _collectableObjects.Clear();
             _calculateCompleted = false;
-            GameManager.OnCompleteStage += OnCompleteStageHandler;
             pitController.MoveDown();
             doorController.CloseDoor();
         }
 
-        private void OnCompleteStageHandler()
-        {
-            GameManager.OnStageThrowControl?.Invoke();
-        }
-
-        private void CalculatePit()
+        public void CalculatePit()
         {
             if (_collectableObjects.Count >= RequiredCollectableCount)
             {
@@ -80,7 +64,7 @@ namespace Picker3D.StageObjets
             }
             else
             {
-                GameManager.OnCompleteStage -= OnCompleteStageHandler;
+                GameManager.OnFailedStage?.Invoke();
             }
         }
 
@@ -88,18 +72,18 @@ namespace Picker3D.StageObjets
         {
             foreach (VisualStageObject visualStageObject in _collectableObjects)
             {
-                NormalCollectable normalCollectable = visualStageObject.transform.parent.GetComponent<NormalCollectable>();
+                NormalCollectable normalCollectable =
+                    visualStageObject.transform.parent.GetComponent<NormalCollectable>();
                 normalCollectable.ColorChange(stageMeshRenderer.sharedMaterial);
                 normalCollectable.Explode();
             }
 
-            _calculateCompleted = true;
-
-            Invoke(nameof(PitMoveUp), 1);
+            Invoke(nameof(Passed), 1);
         }
 
-        private void PitMoveUp()
+        private void Passed()
         {
+            _calculateCompleted = true;
             pitController.MoveUp();
         }
     }
