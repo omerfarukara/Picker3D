@@ -1,4 +1,3 @@
-using System;
 using Picker3D.General;
 using Picker3D.LevelSystem;
 using Picker3D.PoolSystem;
@@ -32,6 +31,9 @@ namespace Picker3D.StageObjets
             }
         }
 
+        /// <summary>
+        /// The big multiplier object closes and normal objects with the same collectable type spawn.
+        /// </summary>
         private void Multiply()
         {
             int fragment = Random.Range(_minFragment, _maxFragment);

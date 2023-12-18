@@ -1,4 +1,3 @@
-using System;
 using Exploder.Utils;
 using Picker3D.LevelSystem;
 using UnityEngine;
@@ -26,6 +25,9 @@ namespace Picker3D.Scripts.StageObjets
             _meshRenderer = GetComponent<MeshRenderer>();
         }
 
+        /// <summary>
+        /// The color of objects changes depending on the IsCollected status.
+        /// </summary>
         public void ColorChange(bool isCollected)
         {
             _meshRenderer.sharedMaterial = isCollected ? collectedMaterial : nonCollectedMaterial;
@@ -44,6 +46,9 @@ namespace Picker3D.Scripts.StageObjets
             transform.localRotation = Quaternion.identity;
         }
 
+        /// <summary>
+        /// Explode object
+        /// </summary>
         public void Explode()
         {
             ExploderSingleton.Instance.ExplodeObject(gameObject);

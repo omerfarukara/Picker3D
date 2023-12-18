@@ -14,6 +14,7 @@ namespace Picker3D.Player
     public class PlayerController : MonoSingleton<PlayerController>
     {
         [SerializeField] private float forwardSpeed, horizontalSpeed;
+        [SerializeField] private float horizontalBoundary;
 
         private Rigidbody _rigidbody;
         private PlayerMovement _playerMovement;
@@ -24,21 +25,14 @@ namespace Picker3D.Player
         private bool _canMove;
         private bool _canThrowCollectables;
 
-        public void ResetPosition()
-        {
-            transform.localPosition = _startPosition;
-            transform.localRotation = _startRotation;
-        }
-
         protected override void Awake()
         {
             base.Awake();
 
-            _startPosition = transform.localPosition;
-            _startRotation = transform.localRotation;
+            StartPositionAndRotationSet();
 
             _rigidbody = GetComponentInChildren<Rigidbody>();
-            _playerMovement = new PlayerMovement(_rigidbody, forwardSpeed, horizontalSpeed);
+            _playerMovement = new PlayerMovement(transform,_rigidbody, forwardSpeed, horizontalSpeed,horizontalBoundary);
         }
 
         private void OnEnable()
@@ -84,28 +78,43 @@ namespace Picker3D.Player
         {
             _canMove = true;
         }
-
         private void CanMoveFalse()
         {
             _canMove = false;
         }
-
         private void CanThrowCollectableTrue(StageController stageController)
         {
             _canThrowCollectables = true;
             StartCoroutine(TriggerPitCalculate(stageController));
         }
-
+        /// <summary>
+        /// The ball launch is released and the current pit calculation is made.
+        /// </summary>
         private IEnumerator TriggerPitCalculate(StageController stageController)
         {
             yield return new WaitForSeconds(1f);
             CanThrowCollectableFalse();
             stageController.CalculatePit();
         }
-
         private void CanThrowCollectableFalse()
         {
             _canThrowCollectables = false;
+        }
+        /// <summary>
+        /// The player returns to the initial position and rotation for the game.
+        /// </summary>
+        public void ResetPosition()
+        {
+            transform.localPosition = _startPosition;
+            transform.localRotation = _startRotation;
+        }
+        /// <summary>
+        /// The player saves the value for returning to the initial position and rotation for the game.
+        /// </summary>
+        private void StartPositionAndRotationSet()
+        {
+            _startPosition = transform.localPosition;
+            _startRotation = transform.localRotation;
         }
     }
 }

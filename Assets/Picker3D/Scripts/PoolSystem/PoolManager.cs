@@ -18,6 +18,9 @@ namespace Picker3D.PoolSystem
          private readonly Queue<PoolObject> _poolBigCollectableObjects = new Queue<PoolObject>();
          private readonly Queue<PoolObject> _poolDroneObjects = new Queue<PoolObject>();
 
+         /// <summary>
+         ///  It is used to pull objects from the pool according to stage type.
+         /// </summary>
         public PoolObject GetPoolObject(StageType stageType)
         {
             switch (stageType)
@@ -48,6 +51,9 @@ namespace Picker3D.PoolSystem
             return null;
         }
 
+         /// <summary>
+         ///  Returns the object you want to return to the pool.
+         /// </summary>
         public void ReturnToPool(PoolObject poolObject)
         {
             switch (poolObject.StageType)

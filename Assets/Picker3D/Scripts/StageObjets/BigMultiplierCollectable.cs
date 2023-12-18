@@ -1,12 +1,6 @@
-using System;
-using Picker3D.General;
-using Picker3D.LevelSystem;
 using Picker3D.Player;
-using Picker3D.PoolSystem;
-using Picker3D.Scripts.StageObjets;
 using Picker3D.StageObjets;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Picker3D.StageObjects
 {
@@ -34,6 +28,9 @@ namespace Picker3D.StageObjects
             }
         }
 
+        /// <summary>
+        /// Big multiplier build process
+        /// </summary>
         protected override void OnBuild()
         {
             foreach (BigMultiplierObject bigVisualObject in bigVisualObjects)

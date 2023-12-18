@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Exploder.Utils;
 using Picker3D.PoolSystem;
 using Picker3D.Scripts.StageObjets;
 using Sirenix.OdinInspector;
@@ -34,6 +33,14 @@ public abstract class BaseCollectableObject : PoolObject
     protected virtual void FixedUpdate()
     {
         if (Rigidbody == null || !IsManualGravity || !Rigidbody.useGravity) return;
+        ManualGravity();
+    }
+
+    /// <summary>
+    /// It is used when normal gravity is insufficient.
+    /// </summary>
+    private void ManualGravity()
+    {
         Vector3 velocity = Rigidbody.velocity;
         velocity.y -= gravityScale;
         Rigidbody.velocity = velocity;
@@ -41,6 +48,10 @@ public abstract class BaseCollectableObject : PoolObject
 
     protected abstract void OnBuild();
 
+    
+    /// <summary>
+    /// The visual opens according to the collectable type.
+    /// </summary>
     public override void Build()
     {
         foreach (VisualStageObject visual in visualObjects)
@@ -59,6 +70,7 @@ public abstract class BaseCollectableObject : PoolObject
         OnBuild();
     }
 
+    // All visions close.
     public override void CloseObject()
     {
         foreach (VisualStageObject visual in visualObjects)

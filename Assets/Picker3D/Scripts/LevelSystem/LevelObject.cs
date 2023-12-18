@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Picker3D.LevelSystem
@@ -10,11 +9,12 @@ namespace Picker3D.LevelSystem
 
         private readonly Queue<LevelStageObject> _levelStageObjects = new Queue<LevelStageObject>();
         
+        /// <summary>
+        /// Build new level objects.
+        /// </summary>
         public void Build(LevelObjectData levelObjectData, int currentPlayedLevelCount)
         {
             transform.position = Vector3.forward * currentPlayedLevelCount;
-
-            // Build the level object
 
             for (int i = 0; i < levelObjectData.LevelStageObjectsData.Length; i++)
             {
@@ -23,6 +23,9 @@ namespace Picker3D.LevelSystem
             }
         }
         
+        /// <summary>
+        /// It retrieves the current level's stage information.
+        /// </summary>
         private LevelStageObject GetNewLevelStageObject()
         {
             if (_levelStageObjects.Count != 0) return _levelStageObjects.Dequeue();
@@ -33,6 +36,9 @@ namespace Picker3D.LevelSystem
             return _levelStageObjects.Dequeue();
         }
 
+        /// <summary>
+        /// Return to queue level stage objects
+        /// </summary>
         private void ReturnToQueue(LevelStageObject levelStageObject)
         {
             _levelStageObjects.Enqueue(levelStageObject);

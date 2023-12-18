@@ -1,5 +1,3 @@
-using System;
-using Picker3D.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 

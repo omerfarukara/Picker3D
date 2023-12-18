@@ -57,6 +57,10 @@ namespace Picker3D.StageObjets
             doorController.CloseDoor();
         }
 
+        
+        /// <summary>
+        /// Calculates the number of objects in the pool.
+        /// </summary>
         public void CalculatePit()
         {
             if (_collectableObjects.Count >= RequiredCollectableCount)
@@ -68,7 +72,7 @@ namespace Picker3D.StageObjets
                 GameManager.OnFailedStage?.Invoke();
             }
         }
-
+        
         private void CollectablesProcess()
         {
             foreach (VisualStageObject visualStageObject in _collectableObjects)

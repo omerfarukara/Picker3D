@@ -1,10 +1,10 @@
-using Picker3D.Scripts.StageObjets;
 using UnityEngine;
 
 namespace Picker3D.StageObjects
 {
     public class NormalCollectable : BaseCollectableObject
     {
+        [SerializeField] private Vector3 forceDirection;
         [SerializeField] private float force;
 
         protected override void OnDisable()
@@ -14,7 +14,7 @@ namespace Picker3D.StageObjects
         
         public void Throw()
         {
-            Rigidbody.AddForce(Vector3.forward * force, ForceMode.VelocityChange);
+            Rigidbody.AddForce(forceDirection * force, ForceMode.VelocityChange);
             IsThrow = true;
         }
 

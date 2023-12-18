@@ -9,11 +9,17 @@ namespace Picker3D.LevelSystem
 
         public int LevelCount => levelObjectsData.Length;
 
+        /// <summary>
+        /// Returns level object data in the current level
+        /// </summary>
         public LevelObjectData GetLevelObjectData(int level)
         {
             return levelObjectsData[level];
         }
-
+        
+        /// <summary>
+        /// Add new level in game
+        /// </summary>
         public void AddLevelObject(LevelObjectData levelObject)
         {
             LevelObjectData[] newLevelObjectsData = new LevelObjectData[levelObjectsData.Length + 1];

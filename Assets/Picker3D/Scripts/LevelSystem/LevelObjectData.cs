@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Picker3D.LevelEditor;
 using UnityEngine;
 
@@ -12,6 +11,9 @@ namespace Picker3D.LevelSystem
 
        public LevelStageObjectData[] LevelStageObjectsData => levelStagesData;
 
+       /// <summary>
+       /// Level data is set according to the editor
+       /// </summary>
        public void SetLevelData(StageData[] stagesData)
        {
            levelStagesData =  new LevelStageObjectData[stagesData.Length];
@@ -24,6 +26,9 @@ namespace Picker3D.LevelSystem
            }
        }
 
+       /// <summary>
+       /// Level data is get according to the editor
+       /// </summary>
        public List<StageData> GetLevelData()
        {
            List<StageData> stagesData = new List<StageData>();

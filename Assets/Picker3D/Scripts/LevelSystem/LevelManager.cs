@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Picker3D.Managers;
 using Picker3D.Player;
 using Picker3D.Scripts.Helpers;
 using Picker3D.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Picker3D.LevelSystem
@@ -51,6 +48,9 @@ namespace Picker3D.LevelSystem
             LevelSpawn();
         }
 
+        /// <summary>
+        /// It is called when the current one is finished and the new level is loaded.
+        /// </summary>
         private void OnNextLevelHandler()
         {
             Level++;
@@ -58,11 +58,17 @@ namespace Picker3D.LevelSystem
             LevelSpawn();
         }
 
+        /// <summary>
+        /// It is called when a stage is completed and the number of stages completed in the current level is increased.
+        /// </summary>
         private void OnCompleteStageHandler()
         {
             CurrentPlayedStage++;
         }
 
+        /// <summary>
+        /// It is called when a level spawned.
+        /// </summary>
         private void LevelSpawn()
         {
             PlayerController.Instance.ResetPosition();
@@ -75,7 +81,10 @@ namespace Picker3D.LevelSystem
 
             _currentLevelObject.Build(levelContentData.GetLevelObjectData(Level - 1), _currentPlayedLevelCount);
         }
-
+        
+        /// <summary>
+        /// It checks whether the stages in the current level are finished or not and returns a boolean.
+        /// </summary>
         public bool AllStageIsComplete()
         {
             int currentLevelStageCount = levelContentData.levelObjectsData[Level - 1].levelStagesData.Length;

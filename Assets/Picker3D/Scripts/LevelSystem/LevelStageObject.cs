@@ -15,15 +15,27 @@ namespace Picker3D.LevelSystem
         private Action<LevelStageObject> _onComplete;
         private Transform _collectableParent;
 
+        private void OnEnable()
+        {
+            GameManager.OnCompleteLevel += OnCompleteLevelHandler;
+            UIManager.OnNextLevelButtonClicked += OnLevelChangeHandler;
+            UIManager.OnRestartLevelButtonClicked += OnLevelChangeHandler;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.OnCompleteLevel -= OnCompleteLevelHandler;
+            UIManager.OnNextLevelButtonClicked -= OnLevelChangeHandler;
+            UIManager.OnRestartLevelButtonClicked -= OnLevelChangeHandler;
+        }
+
         public void Build(LevelStageObjectData levelStageObjectData, int index, Action<LevelStageObject> onComplete)
         {
             _onComplete = onComplete;
-            
+
             transform.position = Vector3.forward * index * 65;
             switch (levelStageObjectData.StageType)
             {
-                case StageType.None:
-                    break;
                 case StageType.NormalCollectable:
                     NormalCollectableBuild(levelStageObjectData);
                     break;
@@ -40,6 +52,9 @@ namespace Picker3D.LevelSystem
             stageController.RequiredCollectableCount = levelStageObjectData.RequiredCollectableCount();
         }
 
+        /// <summary>
+        /// It makes the necessary adjustments so that the collectables lined up on the stage appear properly.
+        /// </summary>
         private void CollectableParentProcess()
         {
             _collectableParent.parent = mainGround;
@@ -50,6 +65,9 @@ namespace Picker3D.LevelSystem
             _collectableParent.localRotation = Quaternion.Euler(Vector3.up * 180);
         }
 
+        /// <summary>
+        /// Normal collectable processing
+        /// </summary>
         private void NormalCollectableBuild(LevelStageObjectData levelStageObjectData)
         {
             for (int i = 0; i < levelStageObjectData.CollectableCount(); i++)
@@ -80,6 +98,9 @@ namespace Picker3D.LevelSystem
             }
         }
 
+        /// <summary>
+        /// Big collectable processing
+        /// </summary>
         private void BigCollectableBuild(LevelStageObjectData levelStageObjectData)
         {
             for (int i = 0; i < levelStageObjectData.CollectableCount(); i++)
@@ -110,20 +131,6 @@ namespace Picker3D.LevelSystem
             }
         }
 
-        private void OnEnable()
-        {
-            GameManager.OnCompleteLevel += OnCompleteLevelHandler;
-            UIManager.OnNextLevelButtonClicked += OnLevelChangeHandler;
-            UIManager.OnRestartLevelButtonClicked += OnLevelChangeHandler;
-        }
-
-        private void OnDisable()
-        {
-            GameManager.OnCompleteLevel -= OnCompleteLevelHandler;
-            UIManager.OnNextLevelButtonClicked -= OnLevelChangeHandler;
-            UIManager.OnRestartLevelButtonClicked -= OnLevelChangeHandler;
-        }
-        
         private void OnCompleteLevelHandler()
         {
             _onComplete?.Invoke(this);
