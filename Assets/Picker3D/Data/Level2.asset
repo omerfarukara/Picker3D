@@ -12,4 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cdb797fc6484abba300e0248ef957d, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  levelStagesData: []
+  levelStagesData:
+  - stageType: 2
+    collectableTypes: 02000000030000000300000001000000010000000400000004000000
+    positions:
+    - {x: 2, y: 5, z: 1}
+    - {x: 0, y: 5, z: 2}
+    - {x: 2, y: 5, z: 3}
+    - {x: 1, y: 5, z: 4}
+    - {x: 1, y: 5, z: 5}
+    - {x: 0, y: 5, z: 7}
+    - {x: 2, y: 5, z: 7}
+    requirementCollectableCountPercent: 20
+  - stageType: 1
+    collectableTypes: 0300000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000
+    positions:
+    - {x: 10, y: 0.5, z: 7}
+    - {x: 6, y: 0.5, z: 8}
+    - {x: 13, y: 0.5, z: 8}
+    - {x: 9, y: 0.5, z: 10}
+    - {x: 13, y: 0.5, z: 11}
+    - {x: 5, y: 0.5, z: 12}
+    - {x: 7, y: 0.5, z: 14}
+    - {x: 17, y: 0.5, z: 14}
+    - {x: 11, y: 0.5, z: 15}
+    - {x: 7, y: 0.5, z: 18}
+    - {x: 14, y: 0.5, z: 18}
+    - {x: 2, y: 0.5, z: 19}
+    - {x: 12, y: 0.5, z: 19}
+    - {x: 13, y: 0.5, z: 21}
+    - {x: 17, y: 0.5, z: 21}
+    - {x: 7, y: 0.5, z: 22}
+    - {x: 5, y: 0.5, z: 24}
+    - {x: 13, y: 0.5, z: 24}
+    - {x: 9, y: 0.5, z: 25}
+    - {x: 3, y: 0.5, z: 27}
+    requirementCollectableCountPercent: 30
